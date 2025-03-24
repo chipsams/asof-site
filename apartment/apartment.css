@@ -1,16 +1,18 @@
 body {
     margin: 0px;
-    overflow: scroll;
     image-rendering: pixelated;
     background-color: black;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    box-sizing: border-box;
     min-width: max-content;
+    padding: 0px 50px;
+    min-height: 100vh;
 }
 .apartment {
-    margin: 200px;
+    margin: 10px;
     border: 5px blue;
     border-style: ridge;
 
