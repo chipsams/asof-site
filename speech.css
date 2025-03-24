@@ -1,0 +1,40 @@
+.speech {
+    display: flex;
+    align-items: flex-start;
+    height: max-content;
+}
+
+.speech img {
+    margin-bottom: 50px;
+}
+
+.speech-text {
+    max-width: 300px;
+    margin-top: 50px;
+    overflow: scroll;
+    height: max-content;
+    background-color: #fff;
+    border: 15px solid transparent;
+    border-image-source: url(./img/speech.gif);
+    border-image-repeat: round;
+    border-width: 16px;
+    border-image-slice: 16;
+    background-clip: padding-box;
+}
+
+.speech-text:has(details){
+    display: flex;
+    flex-flow: wrap;
+}
+
+.speech details {
+    display: contents;
+}
+
+.speech summary {
+    order: -1;
+}
+
+.speech details div {
+    min-width: 100%;
+}

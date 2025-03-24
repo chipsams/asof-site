@@ -1,0 +1,11 @@
+table {
+    margin-left: -60px;
+    margin-right: -60px;
+    border: 2px solid #c8c;
+    background-color: #eaf;
+}
+
+td, th {
+    padding: 10px;
+    border: 2px solid #c8c;
+}

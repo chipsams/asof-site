@@ -1,0 +1,284 @@
+@font-face {
+  font-family: 'Consolas';
+  src: url(./Consolai.ttf);
+}
+@font-face {
+  font-family: 'Linja Pona';
+  src: url(./linja-pona-4.9.otf);
+}
+
+:root {
+  --walo: rgb(214, 227, 243);
+  --loje: rgb(255, 50, 35);
+  --laso: rgb(27, 118, 255);
+  --jelo: rgb(255, 240, 36);
+
+  --base-color: var(--walo);
+}
+
+body {
+  margin: 0px;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keep-on-screen {
+  position: sticky;
+  top: 30px;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.screen-sized {
+  max-height: 90vh;
+  overflow-y: scroll;
+  width: max-content;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.dictionary {
+  width: max-content;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  font-size: 2em;
+}
+
+details.horizontal-fold summary {
+  text-align: left;
+}
+details.horizontal-fold summary {
+  max-width: 1em;
+  transform: rotate(90deg);
+  transform-origin: 0px 1em;
+}
+details.horizontal-fold[open] summary {
+  max-width: unset;
+  transform: none;
+}
+
+.entry {
+  display: contents;
+}
+
+.entry.hidden:not(:has(textarea:focus),:hover) {
+  display: none;
+}
+
+.buttons {
+  margin-top: -10px;
+  grid-column: 1 / 3;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.buttons button {
+  font-size: 2rem;
+  background-color: var(--c, var(--base-color));
+  outline: 5px white solid;
+  font-family: 'Consolas', monospace;
+  border: none;
+  border-radius: 5px;
+  height: min-content;
+  margin: 5px;
+  margin-left: -5px;
+  padding-left: 5px;
+}
+
+.word {
+  font-family: 'Consolas', monospace;
+
+  height: min-content;
+
+  text-align: center;
+
+  border: 5px solid var(--c, var(--base-color));
+  font-weight: 900;
+  border-radius: 5px;
+  
+  margin: 5px;
+  margin-right: -5px;
+
+  padding: 5px;
+  padding-right: 20px;
+
+  background-color: var(--c, var(--base-color));
+}
+
+.definition {
+  z-index: 3;
+  box-sizing: content-box;
+  margin: 5px;
+  outline: 5px white solid;
+  border-radius: 5px;
+  border: 5px solid var(--c, var(--base-color));
+}
+
+.autosize-textarea {
+  display: grid;
+}
+
+.autosize-textarea > * {
+  font-family: 'Consolas', monospace;
+  border: 0px;
+  padding: 5px;
+  margin: 0px;
+  max-width: 60vw;
+  word-break: break-all;
+}
+
+.autosize-textarea > div {
+  font-size: 1em;
+  white-space: pre-wrap; 
+  grid-area: 1/1/2/2;
+  resize: none;
+  min-height: max-content;
+}
+
+.autosize-textarea > textarea {
+  font-size: 1em;
+  grid-area: 1/1/2/2;
+  resize: none;
+  overflow: hidden;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: row;
+}
+
+.voidable-input {
+  display: flex;
+}
+.voidable-input :is(button,input) {
+  border: 5px solid var(--c);
+  padding: 0px;
+  border-radius: 5px;
+}
+
+.voidable-input input {
+  outline: 5px white solid;
+  border: 5px solid var(--walo);
+}
+
+.voidable-input button {
+  font-size: 2rem;
+  background-color: var(--c, var(--base-color));
+  outline: 5px white solid;
+  border: 5px solid var(--walo);
+  font-family: 'Consolas', monospace;
+  border-radius: 5px;
+  height: min-content;
+  margin: 5px;
+  margin-left: -10px;
+  padding-right: 5px;
+}
+
+input {
+  font-family: 'Consolas', monospace;
+  margin: 5px;
+  font-size: 2rem;
+}
+
+.colors {
+  display: flex;
+}
+.colors button {
+  font-size: 2rem;
+  background-color: var(--c, var(--base-color));
+  outline: 5px white solid;
+  font-family: 'Consolas', monospace;
+  border: none;
+  border-radius: 5px;
+  height: min-content;
+  margin: 5px;
+  margin-left: -5px;
+  padding-right: 5px;
+  flex-grow: 1;
+}
+
+.colors button.search-color {
+  color: white;
+}
+
+summary {
+  text-align: center;
+}
+
+.sitelen-pona {
+  font-family: 'Linja Pona';
+}
+
+.qa-segment {
+  font-family: 'Consolas', monospace;
+  border: 5px solid var(--laso);
+  border-radius: 5px;
+  margin: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  padding: 0px;
+}
+.qa-segment summary {
+  text-align: center;
+  border: 5px solid var(--laso);
+  z-index: 2;
+  border-radius: 5px;
+  margin: -5px;
+  margin-bottom: 5px;
+  outline: 5px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2rem;
+  user-select: none;
+}
+.qa-segment a {
+  font-size: 1rem;
+}
+.qa-segment button {
+  font-size: 2rem;
+  font-family: 'Consolas', monospace;
+  background-color: var(--loje);
+  border: 5px solid var(--loje);
+  border-radius: 5px;
+  margin: -5px;
+  margin-left: 5px;
+  outline: 5px solid white;
+}
+
+
+.qa-segment .autosize-textarea > * {
+  line-height: 1.25;
+  font-size: 1.5rem;
+  margin: 0px;
+  padding: 5px;
+  text-align: left;
+}
+.answers {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.answers input {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  min-height: 1.25em;
+  font-size: 1.5rem;
+}

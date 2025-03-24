@@ -1,0 +1,28 @@
+body {
+    margin: 0px;
+    overflow: scroll;
+    image-rendering: pixelated;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: max-content;
+}
+.apartment {
+    margin: 200px;
+    border: 5px blue;
+    border-style: ridge;
+
+    display: grid;
+    width: min-content;
+    grid-template-columns: repeat(6, 256px);
+    grid-template-rows: repeat(6, 256px);
+    background-size: 256px;
+    background-image: url(./rooms/empty_room.png);
+    align-items: stretch;
+}
+
+a img {
+    width: 100%;
+}

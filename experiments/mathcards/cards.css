@@ -1,0 +1,60 @@
+
+game-card {
+  color: inherit;
+  width: 1em;
+  padding-top: 1.5em;
+  margin: -5px;
+  margin-bottom: -30px;
+
+  font-size: 3rem;
+  border: 5px solid;
+  background-color: black;
+  outline: 2px solid black;
+  display: inline-block;
+  position: relative;
+}
+
+game-card::before {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+
+  content: attr(num);
+  pointer-events: none;
+}
+game-card::after {
+  content: attr(opr);
+  pointer-events: none;
+  position: absolute;
+  font-size: 0.5em;
+  left: 0px;
+  top: 0px;
+  opacity: 0.5;
+}
+
+game-card[dragging]{
+  color: blue;
+}
+
+game-card[dragging] game-card {
+  color: blue;
+}
+
+calculation-card-stack game-card.digit {
+  color: red;
+}
+calculation-card-stack game-card.operator {
+  color: darkred;
+}
+calculation-card-stack game-card.operator::before {
+  opacity: 0.5;
+  font-size: 0.5em;
+}
+calculation-card-stack game-card.operator::after {
+  opacity: 1;
+  font-size: 1em;
+}
+
+calculation-card-stack game-card.syntax-error {
+  color: gray;
+}

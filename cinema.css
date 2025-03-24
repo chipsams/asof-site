@@ -1,0 +1,29 @@
+.asof-cinema {
+    align-self: flex-end;
+    margin-right: -40px;
+    width: min-content;
+    height: min-content;
+    position: relative;
+    display: block;
+}
+
+.asof-cinema img {
+    pointer-events: none;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+
+    transition: opacity 0.4s;
+    opacity: 1;
+}
+.asof-cinema iframe {
+    background: radial-gradient(#000,#333);
+    display: block;
+    width: 40vw;
+    min-width: 200px;
+    max-width: 500px;
+    aspect-ratio: 21 / 9;
+}
+.asof-cinema iframe:hover + img {
+    opacity: 0.25;
+}

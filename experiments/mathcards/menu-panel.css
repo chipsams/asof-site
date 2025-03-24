@@ -1,0 +1,64 @@
+
+.panels {
+    display: flex;
+}
+
+menu-panel {
+    display: none;
+    pointer-events: all;
+    padding: 5px;
+    padding-left: 20px;
+    max-width: 30vw;
+
+    background-color: black;
+    
+    border: 6px double white;
+
+    overflow-y: scroll;
+}
+
+.scores {
+    font-size: 2em;
+}
+
+menu-panel[open] {
+    display: inline-block;
+    min-width: 300px;
+    min-height: 300px;
+}
+
+@media (max-width: 1000px) {
+    .panels {
+        overflow-x: hidden;
+        position: absolute;
+        left: 0%;
+        right: 0%;
+        top: 0%;
+        bottom: 0%;
+        pointer-events: none;
+    }
+
+    .panels:has(menu-panel[open]) {
+        pointer-events: all;
+    }
+
+    menu-panel {
+        z-index: 9999;
+
+        display: inline-block;
+        transition: left 0.25s cubic-bezier(.17,.67,.17,1.28);
+        border-right: none;
+
+        max-width: unset;
+        
+        position: absolute;
+        left: 100%;
+        right: 0px;
+        top: 5px;
+        bottom: 5px;
+    }
+    
+    menu-panel[open] {
+        left: 20%;
+    }
+}

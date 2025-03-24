@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Math Card Game</title>
+    <script src="./DragDropTouch.js"></script>
+    <script src="./definitions.js"></script>
+    <script src="./customelements.js"></script>
+    <script src="./panels.js"></script>
+    
+    <link rel="stylesheet" href="./cardgame.css">
+    <link rel="stylesheet" href="./buffer.css">
+    <link rel="stylesheet" href="./cards.css">
+    <link rel="stylesheet" href="./stacks.css">
+    <link rel="stylesheet" href="./menu-panel.css">
+  </head>
+  <body class="flex-verti">
+
+    <div id="gameboard">
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      <calculation-card-stack></calculation-card-stack>
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      <card-stack></card-stack>
+      
+      
+
+      
+      <div style="display: none;" class="panel">
+        
+        <details open>
+          <summary><h2 style="display: inline;">RULES:</h2></summary>
+        </details>
+        <details open>
+
+        </details>
+        <details open>
+          <summary><h2 style="display: inline;">TARGETS:</h2></summary>
+          <div>
+          </div>
+        </details>
+        <details open>
+          <summary><h2 style="display: inline;">BUFFER:</h2></summary>
+          
+        </details>
+        <details open>
+          <summary><h2 style="display: inline;">INFLUX:</h2></summary>
+          
+        </details>
+        <details>
+          <summary><h2 style="display: inline;">CREDITS:</h2></summary>
+          <ul>
+            <li><a href="https://sfxr.me/">https://sfxr.me/</a> for the sound effects.</li>
+            <li>my dear friend ryan!!! hi ryan :D (he play tested a lil bit)</li>
+          </ul>
+        </details>
+      </div>
+      
+      <div class="panels" onclick="setPanel('')">
+        <menu-panel name="options">
+          <button class="menu-button" onclick="setPanel('')">EXT</button>
+          -- TBA --
+        </menu-panel>
+        <menu-panel name="perform">
+          <button class="menu-button" onclick="setPanel('')">EXT</button>
+          <table class="scores">
+            <tr><td>INFLUX LEVEL:</td><td>[<number-view id="influx-level-display"></number-view>]</td></tr>
+            <tr><td>CARDS PER INFLUX:</td><td>[<number-view id="cards-per-influx-display"></number-view>]</td></tr>
+            <tr><td>MS/TICK:</td><td>[<number-view id="ms-per-influx-tick-display"></number-view>]</td></tr>
+            
+            <tr><td>COMPLETED TARGETS:</td><td>[<number-view id="completed-targets-display"></number-view>]</td></tr>
+            <tr><td>EXTRACTED CARDS:</td><td>[<number-view id="extracted-cards-display"></number-view>]</td></tr>
+          </table>
+        </menu-panel>
+        <menu-panel name="explain">
+          <button class="menu-button" onclick="setPanel('')">EXT</button>
+          <ol>
+            <li>
+              cards stack in <b>DIRECT ASC/DSC ORDER</b>, or with <b>MATCHING SYMBOLS</b>.<br>
+              valid stacks:<br>
+              <ul>
+                <li>[+5] [%4] [-3] [+4]</li>
+                <li>[+6] [+4] [+9] [+1]</li>
+                <li>[+6] [-5] [%4] [%8]</li>
+              </ul>
+              invalid stacks:<br>
+              <ul>
+                <li>[+5] [%9] [-3] [*8]</li>
+                <li>[+6] [-4] [+9] [%7]</li>
+              </ul>
+            </li>
+            <li>
+              compose cards into <b>EXPRESSIONS</b> via the <b color="red">RED COLUMN</b>.
+            </li>
+            <li>  
+              produce any TARGET VALUE with an <b>EXPRESSION</b> in order to gain <b>SCORE</b> and reset <b>INFLUX</b>.
+            </li>
+            <li>
+              you will gain <b>NEW CARDS</b> intermittently each time <b>INFLUX</b> fills up.
+            </li>
+            <li>
+              if the <b>CARD BUFFER</b> overflows, <b>FAILIURE</b> occurs.
+            </li>
+            <li>
+              score is expected to be <b>MAXIMIZED</b>.
+            </li>
+          </ol>
+        </menu-panel>
+        <menu-panel name="credits">
+          <button class="menu-button" onclick="setPanel('')">EXT</button>
+          <ul>
+            <li><a href="https://sfxr.me/">https://sfxr.me/</a> for the sound effects.</li>
+            <li>my dear friend ryan!!! hi ryan :D (he play tested a lil bit)</li>
+          </ul>
+        </menu-panel>
+      </div>
+
+      <div class="flex-verti">
+        <number-view id="score-display"></number-view><br>
+        <button class="menu-button" onclick="setPanel('options')">SET</button>
+        <button class="menu-button" onclick="setPanel('perform')">APT</button>
+        <button class="menu-button" onclick="setPanel('explain')">HOW</button>
+        <button class="menu-button" onclick="setPanel('credits')">WHO</button>
+      </div>
+      
+    </div>
+    
+    <div class="bottom-panel">
+      
+      <div class="flex-horiz">
+        <div class="flex-verti">
+          <div class="flex-horiz">
+            <div id="target-list">
+              <game-target></game-target><game-target></game-target><game-target></game-target><game-target></game-target><game-target></game-target><game-target></game-target>
+            </div>
+            <div class="buffer-message">
+              [<span id="buffer-count">0</span>]--&gt;
+            </div>
+          </div>
+
+          <div id="influx-meter">
+            <div class="inner">
+            </div>
+          </div>
+        </div>
+        
+        &nbsp;
+        
+        <div id="buffer-output">
+          x
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+  <script src="./cardgame.js"></script>
+</body>
+</html>

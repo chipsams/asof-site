@@ -1,0 +1,27 @@
+.buffer-holder {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+}
+
+#buffer-output {
+  width: 4.5em;
+  height: 6em;
+  border: 2px solid gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buffer-message {
+  font-size: 4em;
+}
+
+#buffer-output game-card {
+  margin-bottom: -5px;
+}
+
+#buffer-count {
+  display: inline-block;
+}
