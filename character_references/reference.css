@@ -1,0 +1,43 @@
+.image-gallery {
+  display: grid;
+  grid-template-columns: 128px 128px;
+  grid-auto-rows: 128px;
+  overflow-y: scroll;
+}
+
+.image-gallery img {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  background-color: #fff;
+  box-shadow: inset 4px 4px #ccc, inset -4px -4px #ccc;
+}
+
+.character-reference {
+  border: 20px solid #eaf;
+}
+
+.info-row {
+  border: 8px solid #c8c;
+  display: grid;
+  grid-template-rows: 400px;
+  grid-template-columns: min-content 1fr;
+  column-gap: 8px;
+  padding: 8px;
+}
+
+.info-row > * {
+  background-color: #c8c;
+  box-shadow: inset 8px 8px #647;
+  padding: 16px;
+}
+
+.biography {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.biography details {
+  background-color: #eaf;
+}
