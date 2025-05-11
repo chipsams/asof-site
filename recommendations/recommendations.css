@@ -9,3 +9,12 @@ td, th {
     padding: 10px;
     border: 2px solid #c8c;
 }
+
+
+div:has(#show-games:not(:checked)) ~ table .rec.game {
+  display: none;
+}
+
+div:has(#show-films:not(:checked)) ~ table .rec.film {
+  display: none;
+}
