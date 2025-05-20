@@ -18,3 +18,7 @@ div:has(#show-games:not(:checked)) ~ table .rec.game {
 div:has(#show-films:not(:checked)) ~ table .rec.film {
   display: none;
 }
+
+div:has(#show-comics:not(:checked)) ~ table .rec.comic {
+  display: none;
+}
