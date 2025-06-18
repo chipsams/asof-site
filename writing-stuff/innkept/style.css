@@ -1,3 +1,37 @@
 details {
   display: contents;
 }
+
+p {
+  max-width: 600px;
+  padding: 5px;
+  border-left: 4px solid;
+}
+
+ol, ul {
+  padding: 5px 20px;
+  border-left: 4px solid #faa;
+  background-color: #fdd;
+  width: max-content;
+}
+
+li {
+  max-width: 400px;
+
+
+  border-bottom: 4px solid #faa;
+  border-right: 4px solid #faa;
+  padding: 5px;
+  border-bottom-right-radius: 8px;
+}
+
+li:first-child {
+  border-top: 4px solid #faa;
+}
+
+li:nth-child(2n-1) {
+  border-right: none;
+  border-left: 4px solid #faa;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 8px;
+}

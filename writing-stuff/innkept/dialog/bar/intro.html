@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="../style.css">
   </head>
   <body>
-    <div>
+    <a href="../../">^-- Back Up</a>
+    <br>
+    <br>
 
+    <div>
       FI: The rooms were awfully cheap.<br>
       FI: It's probably because:
       <ol>
@@ -17,31 +20,39 @@
       </ol>
       FI: Regardless, I'm not paying standard rates if I can help it, and neither is anyone under my watch.<br>
       
-      CHOOSE:
-      <details>
-        <summary>"I hope the rats are friendly."</summary>
-        FI: Har har. If there's rats, you'll be dealing with them, no matter how "friendly" they are.
-      
-      </details>
-      <details>
-        <summary>"Don't we have plenty of money?"</summary>
-          FI: You'd think, but as it turns out [FO] Can't be trusted near a juice stand!
-          FO: Hey! Those were some refined juices! Aromatic and flavorsome! You'd know if you weren't off doing whatever it is you do!
-          FI: For your information, I was using a tenth of that to get the [consumables? (to be decided)] keeping us alive. Hero tends to forget, and you can't be trusted, so it's left to me.
-          CHOOSE:
-            "That's a little harsh."
-              FI: I haven't embelished. 
-            "..."
-      </details>
-      <details>
-        <summary>"Are you *sure* we couldn't haggle it lower?"</summary>
-          FI: They'd be losing money on the candles at that point. I wouldn't push our luck any further.
-          FO: What if they're.. uh. magic candles.
-          FI: How'd you hear about those. They're still in the research phase.
-          FO: Oh i just guessed!
-          FI: ...
-          FI: Of course.
-      </details>
+      <div class="dialog-choice">
+        CHOOSE:
+        <details>
+          <summary>"I hope the rats are friendly."</summary>
+          FI: Har har. If there's rats, you'll be dealing with them, no matter how "friendly" they are.
+        
+        </details>
+        <details>
+          <summary>"Don't we have plenty of money?"</summary>
+            FI: You'd think, but as it turns out [FO] Can't be trusted near a juice stand!<br>
+            FO: Hey! Those were some refined juices! Aromatic and flavorsome! You'd know if you weren't off doing whatever it is you do!<br>
+            FI: For your information, I was using a tenth of that to get the [consumables? (to be decided)] keeping us alive. Hero tends to forget, and you can't be trusted, so it's left to me.<br>
+            <div class="dialog-choice">
+              CHOOSE:
+              <details>
+                <summary>"That's a little harsh."</summary>
+                FI: I haven't embelished. 
+              </details>
+              <details>
+                <summary>"..."</summary>
+              </details>
+            </div>
+        </details>
+        <details>
+          <summary>"Are you *sure* we couldn't haggle it lower?"</summary>
+            FI: They'd be losing money on the candles at that point. I wouldn't push our luck any further.<br>
+            FO: What if they're.. uh. magic candles.<br>
+            FI: How'd you hear about those. They're still in the research phase.<br>
+            FO: Oh i just guessed!<br>
+            FI: ...<br>
+            FI: Of course.<br>
+        </details>
+      </div>
     </div>
   </body>
 </html>
