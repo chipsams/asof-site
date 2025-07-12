@@ -22,3 +22,7 @@ div:has(#show-films:not(:checked)) ~ table .rec.film {
 div:has(#show-comics:not(:checked)) ~ table .rec.comic {
   display: none;
 }
+
+div:has(#show-writing:not(:checked)) ~ table .rec.writing {
+  display: none;
+}
