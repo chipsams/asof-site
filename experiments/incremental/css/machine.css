@@ -1,0 +1,15 @@
+.grid-machine {
+	grid-template-columns: repeat(4, 100px);
+	display: grid;
+	width: min-content;
+}
+
+.machine {
+	background-color: red;
+	display:flex;
+	flex-direction: column;
+	align-items:center;
+	justify-content: center;
+	aspect-ratio: 1 / 1;
+	position: relative;
+}

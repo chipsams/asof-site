@@ -1,0 +1,20 @@
+
+
+.metal {
+	background: linear-gradient(45deg, #a55, #c88);
+}
+.silicon {
+	background: radial-gradient(#263,#146,#383);
+}
+.concrete {
+	background: 
+	repeating-linear-gradient(100deg, #888f 0px, #8888 15px,#888 20px),
+	repeating-linear-gradient(22deg, #999 0px, #777 5px,#999 15px);
+}
+
+.ticker {
+	color: #fff;
+	width: 200px;
+	padding: 5px;
+	font-family: 'Courier New', Courier, monospace;
+}
