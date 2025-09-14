@@ -1,15 +1,108 @@
 .grid-machine {
-	grid-template-columns: repeat(4, 100px);
 	display: grid;
+	grid-template-columns: repeat(4, 160px);
 	width: min-content;
+	column-gap: 4px;
+	row-gap: 4px;
+	padding: 4px;
+	background: linear-gradient(-45deg,#333,#555);
 }
 
 .machine {
-	background-color: red;
+	background: radial-gradient(#000,#222);
 	display:flex;
 	flex-direction: column;
-	align-items:center;
+	align-items:stretch;
 	justify-content: center;
 	aspect-ratio: 1 / 1;
 	position: relative;
+	user-select: none;
+	transition: border-width 0.25s;
+	max-height: 160px;
+}
+.machine:hover {
+	background: radial-gradient(#300,#533);
+}
+
+.machine:has(.machine-inner) {
+}
+
+.machine-inner {
+	border: outset #0004 5px;
+	background-color: #44f9;
+	color: white;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.desc {
+	font-size: 0.75em;
+}
+
+.inventory-machine {
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+}
+
+.mouse {
+	background: white;
+	padding: 10px;
+	box-shadow: 10px 10px 5px #0004;
+	position:absolute;
+	pointer-events:none;
+}
+
+.machine ul {
+	flex-grow: 1;
+	margin: 0px;
+	padding-left: 25px;
+}
+
+.processing-cores {
+	display: flex;
+	border: 2px solid black;
+}
+.core {
+	border: inset #0004;
+	flex-grow: 1;
+	text-align: center;
+	border-color: hsl(40deg, 50%, calc(var(--p) * 100%));
+}
+.core:hover {
+	border-color: green;
+	pointer-events: all;
+}
+
+.interval-timer {
+	position: relative;
+	background: linear-gradient(to right,#494,#5f5);
+	text-align: center;
+	color: #000;
+}
+
+.interval-indicator {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	bottom: 0%;
+	background: linear-gradient(to right,#944,#f55);
+	text-align: center;
+	color: #fff;
+	transition: right 0.25s;
+}
+
+.trade-purchaser {
+	display: flex;
+}
+
+.trade-costs {
+	color: white;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.unbuyable {
+	color: red;
 }

@@ -1,6 +1,6 @@
 import { scrapGrid, scrapGridElement } from "./scrap.js"
 import van from "./lib/van-1.5.2.debug.js"
-import { machineGrid, machineGridElement } from "./machines.js"
+import { machineGrid, machineGridElement, machineInventory, machineInventoryElement, machinePlanElement } from "./machines.js"
 
 const {tags,state} = van
 const {
@@ -16,9 +16,9 @@ export const p = {
     scrapGrid: scrapGrid,
     machineGrid: machineGrid,
     resources: {
-        metal: state(0),
-        silicon: state(0),
-        concrete: state(0)
+        metal: state(15),
+        silicon: state(15),
+        concrete: state(15)
     }
 }
 
@@ -27,18 +27,21 @@ window.p = p
 function tickingDisplay(v){
     let temp = state(v.val)
     setInterval(() => {
-        let max = Math.max(v.val-temp.val)
         let dir = Math.sign(v.val-temp.val)
-        temp.val += dir * Math.min(Math.abs(v.val-temp.val),1+max*0.1)
+        temp.val += dir * Math.min(Math.abs(v.val-temp.val),1+Math.abs(v.val-temp.val)*0.1)
     }, 100);
     return span(()=>temp.val.toFixed(1))
 }
 
 
-van.add(document.body,div({style:"display:flex; align-items: center; justify-content: space-between"},
+van.add(document.body,div({style:"display:flex; align-items: center; justify-content: space-around"},
     scrapGridElement(),
     div(
-        Object.entries(p.resources).map(([res,v])=>div({class:`ticker ${res}`},res,":",tickingDisplay(v)))
+        div(Object.entries(p.resources).map(([res,v])=>div({class:`ticker ${res}`},res,":",tickingDisplay(v)))),
+        machinePlanElement(),
     ),
-    machineGridElement(),
+    div(
+        machineGridElement(),
+        machineInventoryElement(),
+    )
 ))
