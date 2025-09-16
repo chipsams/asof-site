@@ -23,7 +23,6 @@ export function serializeMachineLayerData(){
             choices: serializeMachineList(machineChoices)
         }
     }
-    console.log(JSON.stringify(serializedData,(k,v)=>typeof v == "number"?v.toFixed(4):v))
     return serializedData;
 }
 setTimeout(serializeMachineLayerData,0)

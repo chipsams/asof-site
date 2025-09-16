@@ -2,14 +2,13 @@ import van from "../lib/van-1.5.2.debug.js"
 import { deserializeMachine, generateMachine, machineChoices, serializeMachine } from "./machine_creation.js"
 import { templates } from "./machine_data.js"
 import { displayPacket } from "../script.js"
-import { serializeMachineLayerData } from "./serializer.js"
+import { deserializeMachineLayerData, serializeMachineLayerData } from "./serializer.js"
 
 const {tags,state} = van
 const {
   input,h2,div,textarea,span,button,br,
   ul,ol,li,a,p: paragraph,details,summary,
 } = tags
-console.log(state)
 
 
 /**
@@ -32,14 +31,7 @@ console.log(state)
 /** @type {State<Machine?>[]} */
 export const machineGrid = new Array(16).fill().map(()=>state(null))
 
-
-//TODO: remove
-//machineGrid[0].val = generateMachine(templates.harvester,4)
-machineGrid[4].val = generateMachine(templates.crusher,4)
-//machineGrid[8].val = generateMachine(templates.processor,4)
-setTimeout(() => {
-    gatherResource("metal",1,document.body)
-}, 0);
+const sleep = t=>new Promise(r=>setTimeout(r,t))
 
 const inventorySize = 8*3
 /** @type {State<Machine?>[]} */

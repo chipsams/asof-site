@@ -9,9 +9,12 @@ const {
 } = tags
 
 let tileKinds = ["metal","silicon","concrete","none"]
-export const scrapGrid = new Array(64).fill().map(_=>{
+
+export const scrapData = {}
+scrapData.depth = state(0)
+scrapData.scrapGrid = new Array(64).fill().map(_=>{
     let v = {
-        res: state("none"),
+        res: state(tileKinds[Math.floor(Math.random()*tileKinds.length)]),
         hp: state(0)
     }
     v.elt = div({
@@ -65,21 +68,32 @@ export function scrapHit(v,dmg=1,crit=0.1,intercept){
 const sleep = t=>new Promise(r=>setTimeout(r,t))
 let holding = false
 
-export async function resetScrapGrid(){
-    let delay = 300
-    for(let tile of scrapGrid){
-        await sleep(delay)
-        delay *= 0.95
+export async function fillScrapGrid(depth,flip){
+    
+    scrapData.scrapGrid.forEach(async (tile,i)=>{
+        await sleep((flip?i%8:7-i%8)*50+Math.random()*100)
+
         tile.res.val = tileKinds[Math.floor(Math.random()*tileKinds.length)]
         tile.hp.val = tile.res.val == "none"?0:Math.round(Math.random()*6+7)
-    }
+    })
+}
+
+export function changeDepth(d) {
+    if(scrapData.depth.val<=0 && d<0) return;
+    scrapData.depth.val += d
+    fillScrapGrid(scrapData.depth.val,d<0)
+    
 }
 
 export function scrapGridElement(){
     return div(
         div({class:"grid-scrap"},
-            scrapGrid.map(v=>v.elt),
+            scrapData.scrapGrid.map(v=>v.elt),
         ),
-        button({onclick:resetScrapGrid},"reset")
+        div({class:"depth-controls"},
+            button({onclick:()=>changeDepth(-1),disabled:()=>scrapData.depth.val==0},"<"),
+            scrapData.depth,
+            button({onclick:()=>changeDepth(+1)},">"),
+        )
     )
 }

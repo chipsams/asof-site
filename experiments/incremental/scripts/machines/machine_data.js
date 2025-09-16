@@ -1,5 +1,5 @@
 import { gatherResource, refineResource, storeResource } from "./machines.js"
-import { scrapGrid, scrapHit } from "../scrap.js"
+import { scrapData, scrapHit } from "../scrap.js"
 import { displayPacket } from "../script.js"
 
 const sample = t=>t[Math.floor(Math.random()*t.length)]
@@ -34,9 +34,13 @@ templates.harvester = {
         `x${m.stats.productivity.val.toFixed(1)}`
     ],
     onIntervalFinish(m){
-        scrapHit(sample(scrapGrid),m.stats.tools.val,m.stats.crit_chance.val,(r,amt,elt)=>{
-            gatherResource(r,amt*m.stats.productivity.val,elt)
-        })
+        let targets = scrapData.scrapGrid.filter(t=>t.res.val!=="none")
+        if(targets.length > 0){
+            let target = sample(targets)
+            scrapHit(target,m.stats.tools.val,m.stats.crit_chance.val,(r,amt,elt)=>{
+                gatherResource(r,amt*m.stats.productivity.val,elt)
+            })
+        }
         m.t.val = 0
     }
 }
@@ -107,6 +111,7 @@ templates.processor = {
             if(core.r.val !== "") continue;
             displayPacket(r,amt,elt,core.mainElt)
             core.t.val = 0
+            console.log("refinign",r)
             core.r.val = r
             core.amt.val = amt
             return true;

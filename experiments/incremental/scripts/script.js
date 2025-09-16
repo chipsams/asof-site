@@ -1,4 +1,4 @@
-import { scrapGrid, scrapGridElement } from "./scrap.js"
+import { scrapData, scrapGridElement } from "./scrap.js"
 import van from "./lib/van-1.5.2.debug.js"
 import { machineGrid, machineGridElement, machineInventory, machineInventoryElement } from "./machines/machines.js"
 import { machinePlanElement } from "./machines/machine_creation.js"
@@ -14,7 +14,7 @@ const {
 // (e.g. scrap multipliers, automation, boosting adjacent objects)
 
 export const p = {
-    scrapGrid: scrapGrid,
+    scrap: scrapData,
     machineGrid: machineGrid,
     resources: {
         metal: state(15),

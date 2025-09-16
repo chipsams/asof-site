@@ -3,7 +3,7 @@ import { displayMachine, machineInventory } from "./machines.js"
 
 function displayCore(core){
     return div({
-            class:()=>"core "+core.r.val,
+            class:()=>["core",core.r.val].join(" "),
             style:()=>`--p:${core.t.val/core.maxT.val}`,
             onmousedown:(e)=>{
                 storeResource(core.r.val,core.amt.val,core.mainElt)
@@ -14,20 +14,21 @@ function displayCore(core){
             }
         },
         ()=>(core.t.val/core.maxT.val*9).toFixed(0),
+        core.totalT
     )
 }
 
 /** @returns {Core} */
-export function createCore(machine){
+export function createCore(machine,data){
     let core = {
-        t:state(0),
+        t:state(data?.t??0),
         maxT:van.derive(()=>machine.stats.speed.val),
-        r:state(""),
-        amt:state(0)
+        r:state(data?.r??""),
+        amt:state(data?.amt??0)
     }
     let elt = displayCore(core)
     core.mainElt = elt
-    core.refElt = ()=>displayco(core)
+    core.refElt = ()=>displayCore(core)
     core.elt = ()=>{
         elt.remove()
         return elt
@@ -53,7 +54,6 @@ const sample = t=>t[Math.floor(Math.random()*t.length)]
  * @returns 
  */
 export function serializeMachine(machine){
-    console.log(machine)
     let flatData = {
         slug:machine.template.slug,
         quality:machine.quality.val,
@@ -78,18 +78,6 @@ function deRef(o){
 export function deserializeMachine(data){
     let template = templates[data.slug]
     let machine = generateMachine(template,data.quality,data)
-    if(data.processing){
-        data.processing.forEach((core,i)=>{
-            console.log(deRef(machine.processing[i]),"<-",core)
-            setTimeout(()=>{
-                machine.processing[i].r.val = core.r
-                machine.processing[i].amt.val = core.amt
-                machine.processing[i].t.val = core.t
-                console.log("outputting:",machine.processing[i])
-                console.log(deRef(machine.processing[i]),"<-",core)
-            },0)
-        })
-    }
     return machine
 }
 
@@ -136,7 +124,8 @@ export function generateMachine(template,quality,existingData){
     machine.bias = bias
     machine.stats = effectiveStats
     if(template.stats.interval) machine.t = state(0)
-    if(template.stats.core_count) machine.processing = new Array(machine.stats.core_count.val).fill().map(()=>createCore(machine))
+    if(template.stats.core_count) machine.processing = new Array(machine.stats.core_count.val)
+        .fill().map((_,i)=>createCore(machine,existingData?.processing?.[i]))
     machine.onResourceGain = template.onResourceGain
     machine.onResourceRefine = template.onResourceRefine
     machine.onIntervalFinish = template.onIntervalFinish
