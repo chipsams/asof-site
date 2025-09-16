@@ -1,6 +1,6 @@
 import { p } from "./script.js";
 import van from "./lib/van-1.5.2.debug.js"
-import { gatherResource } from "./machines.js";
+import { gatherResource } from "./machines/machines.js";
 
 const {tags,state} = van
 const {
@@ -11,8 +11,8 @@ const {
 let tileKinds = ["metal","silicon","concrete","none"]
 export const scrapGrid = new Array(64).fill().map(_=>{
     let v = {
-        res: state(tileKinds[Math.floor(Math.random()*tileKinds.length)]),
-        hp: state(10)
+        res: state("none"),
+        hp: state(0)
     }
     v.elt = div({
             class:()=>`resource ${v.res.val??"none"}`,
@@ -53,9 +53,9 @@ export function scrapHit(v,dmg=1,crit=0.1,intercept){
     v.hp.val -= effDmg
     if(v.hp.val<=0){
         if(intercept){
-            intercept(v.res.val,1)
+            intercept(v.res.val,1,v.elt)
         }else{
-            gatherResource(v.res.val,1)
+            gatherResource(v.res.val,1,v.elt)
         }
         v.hp.val = 0;
         v.res.val = "none";
@@ -71,7 +71,7 @@ export async function resetScrapGrid(){
         await sleep(delay)
         delay *= 0.95
         tile.res.val = tileKinds[Math.floor(Math.random()*tileKinds.length)]
-        tile.hp.val = 10
+        tile.hp.val = tile.res.val == "none"?0:Math.round(Math.random()*6+7)
     }
 }
 

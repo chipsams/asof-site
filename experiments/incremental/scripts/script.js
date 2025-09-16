@@ -1,6 +1,7 @@
 import { scrapGrid, scrapGridElement } from "./scrap.js"
 import van from "./lib/van-1.5.2.debug.js"
-import { machineGrid, machineGridElement, machineInventory, machineInventoryElement, machinePlanElement } from "./machines.js"
+import { machineGrid, machineGridElement, machineInventory, machineInventoryElement } from "./machines/machines.js"
+import { machinePlanElement } from "./machines/machine_creation.js"
 
 const {tags,state} = van
 const {
@@ -22,6 +23,34 @@ export const p = {
     }
 }
 
+/**
+ * 
+ * @param {string} r 
+ * @param {number} amt 
+ * @param {HTMLElement} fElt 
+ * @param {HTMLElement} tElt 
+ */
+export function displayPacket(r,amt,fElt,tElt){
+    //console.log(fElt,tElt)
+    let packet = div({
+        class: [r,"packet"].join(" ")
+    },amt.toFixed(1))
+    document.body.appendChild(packet)
+    let fRect = fElt.getBoundingClientRect()
+    let tRect = tElt.getBoundingClientRect()
+    let [fx,tx,fy,ty] = [
+        (fRect.left+fRect.right)/2,
+        (tRect.left+tRect.right)/2,
+        (fRect.top+fRect.bottom)/2,
+        (tRect.top+tRect.bottom)/2
+    ]
+    packet.animate({
+        left:[fx+"px",tx+"px"],
+        top:[fy+"px",ty+"px"]
+    },{duration:200,easing:"ease-out"}).onfinish=()=>packet.remove()
+}
+
+
 window.p = p
 
 function tickingDisplay(v){
@@ -37,7 +66,7 @@ function tickingDisplay(v){
 van.add(document.body,div({style:"display:flex; align-items: center; justify-content: space-around"},
     scrapGridElement(),
     div(
-        div(Object.entries(p.resources).map(([res,v])=>div({class:`ticker ${res}`},res,":",tickingDisplay(v)))),
+        div(Object.entries(p.resources).map(([res,v])=>div({id:`store-${res}`,class:`ticker ${res}`},res,":",tickingDisplay(v)))),
         machinePlanElement(),
     ),
     div(

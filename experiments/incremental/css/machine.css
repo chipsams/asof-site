@@ -92,6 +92,10 @@
 	transition: right 0.25s;
 }
 
+.machine-trading {
+	width: 160px;
+}
+
 .trade-purchaser {
 	display: flex;
 }
@@ -100,6 +104,7 @@
 	color: white;
 	flex-grow: 1;
 	display: flex;
+	align-items: stretch;
 	flex-direction: column;
 }
 

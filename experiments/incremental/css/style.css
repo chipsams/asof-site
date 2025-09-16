@@ -18,3 +18,11 @@
 	padding: 5px;
 	font-family: 'Courier New', Courier, monospace;
 }
+
+.packet {
+	position:absolute;
+	border-radius:9999px;
+	aspect-ratio:1;
+	padding:5px;
+	translate: -50% -50%;
+}
