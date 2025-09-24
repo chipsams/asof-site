@@ -16,6 +16,9 @@
 
 
 .resource .hp {
+  background-color: #0008;
+  padding: 0px 8px;
+  color: #fff;
 	font-size: 0.75em;
 	position: absolute;
 	bottom: 0px;

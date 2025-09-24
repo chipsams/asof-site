@@ -1,6 +1,6 @@
 .grid-machine {
 	display: grid;
-	grid-template-columns: repeat(4, 160px);
+	grid-template-columns: repeat(4, 120px);
 	width: min-content;
 	column-gap: 4px;
 	row-gap: 4px;
@@ -28,8 +28,11 @@
 }
 
 .machine-inner {
+  box-sizing: border-box;
+  width: 120px;
+	aspect-ratio: 1 / 1;
 	border: outset #0004 5px;
-	background-color: #44f9;
+	background-color: #44f;
 	color: white;
 	flex-grow: 1;
 	display: flex;
@@ -53,7 +56,7 @@
 	pointer-events:none;
 }
 
-.machine ul {
+.machine-inner ul {
 	flex-grow: 1;
 	margin: 0px;
 	padding-left: 25px;
@@ -62,6 +65,7 @@
 .processing-cores {
 	display: flex;
 	border: 2px solid black;
+  margin-top: auto;
 }
 .core {
 	border: inset #0004;
@@ -75,6 +79,7 @@
 }
 
 .interval-timer {
+  margin-top: auto;
 	position: relative;
 	background: linear-gradient(to right,#494,#5f5);
 	text-align: center;
@@ -93,19 +98,39 @@
 }
 
 .machine-trading {
-	width: 160px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 50px auto;
+}
+
+.tradable-machine {
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-columns: 1fr;
+  grid-template-rows: subgrid;
 }
 
 .trade-purchaser {
 	display: flex;
+  flex-direction: column;
+}
+
+.trade-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .trade-costs {
 	color: white;
-	flex-grow: 1;
+  height: 40px;
 	display: flex;
-	align-items: stretch;
 	flex-direction: column;
+	align-items: stretch;
+  justify-content: stretch;
+}
+
+.cost {
+  flex-grow: 1;
 }
 
 .unbuyable {
