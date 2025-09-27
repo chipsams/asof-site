@@ -47,6 +47,9 @@ for(let machine in templates){
 
 function tickMachines(){
   let coreCountSound = {};
+  for(let m in templates){
+    if(templates[m].processingSound) coreCountSound[templates[m].processingSound] = {s:templates[m].processingSound,c:0}
+  }
 
 	for(let l=0;l<machineGrid.length;l++){
 		let m = machineGrid[l].val
@@ -57,7 +60,6 @@ function tickMachines(){
 				m.onIntervalFinish(m)
 			}
 		}
-    if(m.template.processingSound) coreCountSound[m.template.processingSound]??={s:m.template.processingSound,c:0}
 		if(m.processing) m.processing.forEach(core => {
 			if(core.r.val == "") return;
       coreCountSound[m.template.processingSound].c += 1
@@ -69,7 +71,7 @@ function tickMachines(){
 	}
 
   for(let [_,data] of Object.entries(coreCountSound)){
-    data.s.volume(data.c==0?0:Math.sqrt(data.c))
+    data.s.volume(data.c==0?0:Math.sqrt(data.c)/3)
     data.s.rate(1+data.c/4)
   }
 }
@@ -114,7 +116,7 @@ function swap(a,b){
 	[a.val,b.val] = [b.val,a.val]
 }
 
-function machineDrop(v,i,elt){
+function machineDrop(i,v,elt){
 	if(grabbedLocation.val == null) return;
 
 	let data = grabbedLocation.val
@@ -123,7 +125,7 @@ function machineDrop(v,i,elt){
 	grabbedLocation.val = null
 }
 
-function machineGrab(arr,i,elt){
+function machineGrab(i,arr,elt){
 	if(arr[i].val == null) return;
 	grabbedLocation.val = {arr,i}
 	document.addEventListener("mouseup",e=>{
@@ -132,27 +134,40 @@ function machineGrab(arr,i,elt){
 }
 
 export function displayMachine(m,i,arr){
-   return m==null?span("machine was null???"):div(
+  if(m==null) return span("machine was null???")
+  if(!m.viewData){
+    m.viewData = {}
+    m.template.initView?.(m)
+  }
+
+  return div(
     {class:"machine-inner",
       title:()=>`Machine with quality: ${m.quality.val.toFixed(2)}\n` + 
-      `${Object.entries(m.bias).map(([k,v])=>`${k}: ${Math.floor(v.val*100)}%`).join("\n")}`
-    },(
-		grabbedLocation.val &&
-		grabbedLocation.val.i==i && 
-		grabbedLocation.val.arr==arr
-	)?"***":m.id,
-	br,
-	ul({class:"desc"},m.desc.map(v=>li(v))),
-	m.template.stats.interval && div({class:"interval-timer"},
-		()=>(m.t.val/m.stats.interval.val*99).toFixed(0),
-		()=>div({
-			class:"interval-indicator",
-			style:()=>`right:${(m.t.val/m.stats.interval.val*100).toFixed(2)}%`
-		},()=>(m.t.val/m.stats.interval.val*99).toFixed(0))
-	),
-	m.processing && div({class:"processing-cores"},
-		m.processing.map(core=>core.elt)
-	))
+      `${Object.entries(m.bias).map(([k,v])=>`${k}: ${Math.floor(v.val*100)}%`).join("\n")}\n==\n` +
+      m.desc.join("\n")
+    },div({
+      class:"machine-title",
+      onmousedown: ()=>machineGrab(i,arr)
+    },()=>(
+      grabbedLocation.val &&
+      grabbedLocation.val.i==i && 
+      grabbedLocation.val.arr==arr
+    )?"***":m.id),
+    ()=>m.template.renderView?.(m),
+    /*
+    ul({class:"desc"},m.desc.map(v=>li(v))),
+    m.template.stats.interval && div({class:"interval-timer"},
+      ()=>(m.t.val/m.stats.interval.val*99).toFixed(0),
+      ()=>div({
+        class:"interval-indicator",
+        style:()=>`right:${(m.t.val/m.stats.interval.val*100).toFixed(2)}%`
+      },()=>(m.t.val/m.stats.interval.val*99).toFixed(0))
+    ),
+    m.processing && div({class:"processing-cores"},
+      m.processing.map(core=>core.elt)
+    )
+    */
+  )
 }
 
 export function machineGridElement(){
@@ -160,8 +175,7 @@ export function machineGridElement(){
 		machineGrid.map((v,i)=>div(
 			{
 				class: "machine",
-				onmouseup:(e)=>machineDrop(v,i,e.target),
-				onmousedown: (e)=>machineGrab(machineGrid,i,e.target)
+				onmouseup:(e)=>machineDrop(i,v)
 			},
 			()=>v.val?displayMachine(v.val,i,machineGrid):span()
 		)),
@@ -174,8 +188,8 @@ document.addEventListener("mousemove",(e)=>{[mouse.x.val,mouse.y.val] = [e.x,e.y
 export function machineInventoryElement(){
 	return div({class:"inventory-machine"},
 		machineInventory.map((v,i)=>button({
-			onmouseup:(e)=>machineDrop(v,i,e.target),
-			onmousedown: (e)=>machineGrab(machineInventory,i,e.target)
+			onmousedown:(e)=>machineGrab(i,machineInventory),
+			onmouseup:(e)=>machineDrop(i,v),
 		},()=>(
 			grabbedLocation.val &&
 			grabbedLocation.val.i==i && 

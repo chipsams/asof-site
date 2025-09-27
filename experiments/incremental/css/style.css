@@ -39,9 +39,15 @@ body {
 }
 
 .packet {
+  pointer-events: none;
 	position:absolute;
 	border-radius:9999px;
 	aspect-ratio:1;
 	padding:5px;
 	translate: -50% -50%;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }

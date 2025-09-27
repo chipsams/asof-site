@@ -28,6 +28,8 @@ export const p = {
 	}
 }
 
+let hydraulicsRelax = new Howl({src:"sfx/hydraulics-relax.ogg"})
+
 /**
  * 
  * @param {string} r 
@@ -36,23 +38,44 @@ export const p = {
  * @param {HTMLElement} tElt 
  */
 export function displayPacket(r,amt,fElt,tElt){
+  let id = hydraulicsRelax.play()
+  hydraulicsRelax.rate(0.2+Math.random()*0.2,id)
+  hydraulicsRelax.volume(0.05+Math.random()*0.05,id)
 	//console.log(fElt,tElt)
-	let packet = div({
-		class: [r,"packet"].join(" ")
-	},amt.toFixed(1))
-	document.body.appendChild(packet)
-	let fRect = fElt.getBoundingClientRect()
-	let tRect = tElt.getBoundingClientRect()
-	let [fx,tx,fy,ty] = [
-		(fRect.left+fRect.right)/2,
-		(tRect.left+tRect.right)/2,
-		(fRect.top+fRect.bottom)/2,
-		(tRect.top+tRect.bottom)/2
-	]
-	packet.animate({
-		left:[fx+"px",tx+"px"],
-		top:[fy+"px",ty+"px"]
-	},{duration:200,easing:"ease-out"}).onfinish=()=>packet.remove()
+  for(let l=0;l<3;l++){
+    setTimeout(()=>{
+
+      let packet = div({
+        class: [r,"packet"].join(" ")
+      },amt.toFixed(1))
+      document.body.appendChild(packet)
+      let fRect = fElt.getBoundingClientRect()
+      let tRect = tElt.getBoundingClientRect()
+      let [fx,tx,fy,ty] = [
+        (fRect.left+fRect.right)/2,
+        (tRect.left+tRect.right)/2,
+        (fRect.top+fRect.bottom)/2,
+        (tRect.top+tRect.bottom)/2
+      ]
+    
+      let duration = 200+Math.random()*100
+
+      fx += window.scrollX
+      tx += window.scrollX
+      fy += window.scrollY
+      ty += window.scrollY
+      packet.animate({scale:[0.5,1,0.5,0]},duration)
+      packet.animate({
+        left:[fx+"px",tx+"px"],
+        top:[fy+"px",ty+"px"]
+      },{duration:duration,easing:"ease-out"}).onfinish=()=>{
+        packet.remove()
+        let id = hydraulicsRelax.play()
+        hydraulicsRelax.rate(0.9+Math.random()*0.2,id)
+        hydraulicsRelax.volume(0.1+Math.random()*0.1,id)
+      }
+    },l*60)
+  }
 }
 
 

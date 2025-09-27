@@ -6,3 +6,7 @@ https://freesound.org/people/shimsewn/sounds/87273/
 processing.ogg
 https://freesound.org/people/Sacha.Julien/sounds/725324/
 crushing.ogg
+https://freesound.org/people/NoiseCollector/sounds/63135/
+unprocessed-pneumatic-tube.ogg
+https://freesound.org/people/magnuswaker/sounds/581083/
+hydraulics-relax.ogg

@@ -3,6 +3,15 @@ import { scrapData, scrapHit } from "../scrap.js"
 import { displayPacket } from "../script.js"
 import * as howl from "../lib/howler.js"
 
+import van from "../lib/van-1.5.2.debug.js"
+
+const {tags,state} = van
+const {
+  input,h2,div,textarea,span,button,br,
+  ul,ol,li,a,p: paragraph,details,summary,
+} = tags
+
+
 const sample = t=>t[Math.floor(Math.random()*t.length)]
 
 export const templates = {}
@@ -11,11 +20,11 @@ templates.harvester = {
 	stats:{
 		"tools":{
 			char:"T",name:"Harm Capacity Of Tools",
-			material: "metal", formula: (f,q)=>Math.round(5+4*f**1.5*q)
+			material: "metal", formula: (f,q)=>Math.round(4+5*f**1.5*q)
 		},
 		"interval":{
 			char:"S",name:"Process Speed In Seconds",
-			material:"silicon", formula: (f,q)=>45/(1+f*q*0.4)
+			material:"silicon", formula: (f,q)=>20/(1+q*(f**2))
 		},
 		"productivity":{
 			char:"P",name:"Bonus Production Multiplier",
@@ -23,9 +32,34 @@ templates.harvester = {
 		},
 		"crit_chance":{
 			char:"C",name:"Critical Chance",
-			material:"concrete", formula: (f,q)=>1-(0.8^(f*10*q))
+			material:"concrete", formula: (f,q)=>1-0.9**(1+f*q)
 		}
 	},
+  initView:(m)=>{
+    m.viewData.critSample = state(0)
+    m.viewData.crit = state(false)
+  },
+  renderView:(m)=>{
+    return div(
+      div({class:"interval-timer"},
+        ()=>div({
+          class:"interval-indicator",
+          style:()=>`right:${m.t.val/m.stats.interval.val*100}%`
+        },
+          ()=>m.t.val.toFixed(2),"/",
+          ()=>m.stats.interval.val.toFixed(2)
+        ),
+        span(
+          ()=>m.t.val.toFixed(2),"/",
+          ()=>m.stats.interval.val.toFixed(2)
+        ),
+      ),
+      div({class:"crit-meter",style:()=>`--crit:${m.stats.crit_chance.val*100}%`},
+        div({class:()=>m.viewData.crit.val?"crit-indicator success":"crit-indicator",style:()=>`right:${m.viewData.critSample.val*100}%`})
+      ),
+      m.viewData.crit
+    )
+  },
 	nameGen:(stats,m)=>{
 		return `LK${(m.stats.tools.val)}J${stats[0].char}`
 	},
@@ -38,8 +72,10 @@ templates.harvester = {
 		let targets = scrapData.scrapGrid.filter(t=>t.res.val!=="none")
 		if(targets.length > 0){
 			let target = sample(targets)
-			scrapHit(target,m.stats.tools.val,m.stats.crit_chance.val,(r,amt,elt)=>{
-				gatherResource(r,amt*m.stats.productivity.val,elt)
+			scrapHit(target,m.stats.tools.val,m.stats.crit_chance.val,(r,amt,elt,{critCheck,isCrit})=>{
+        m.viewData.critSample.val = critCheck
+        m.viewData.crit.val = isCrit
+				if(r!=="none") gatherResource(r,amt*m.stats.productivity.val,elt)
 			})
 		}
 		m.t.val = 0
@@ -54,7 +90,7 @@ templates.crusher = {
 			material:"metal", formula: (f,q)=>30/(1+f*q*0.5)
 		},"core_count":{
 			char:"C",name:"Parallel Core Count",
-			material:"concrete", formula: (f,q)=>Math.round(1+f*q)
+			material:"concrete", formula: (f,q)=>Math.round(1+f*q/2)
 		},"repeat_chance":{
 			char:"P",name:"Probability Of Repetition",
 			material:"metal", formula: (f,q)=>1-0.9**(1+f*q)
@@ -64,6 +100,22 @@ templates.crusher = {
 	nameGen:(stats,m)=>{
 		return `${(m.stats.repeat_chance.val*100).toFixed(0)}%N${stats[2].char}W`
 	},
+  initView:(m)=>{
+    m.viewData.blinker = div("a",Math.random().toFixed(2));
+  },
+  renderView:(m)=>{
+    const squishAnim = ()=>{
+      return (1-Math.abs(Math.sin(m.processing.reduce((t,b)=>t+b.t.val,0)*4+Math.PI/2)))/5
+    }
+
+    return div({class:"crusher"},
+      div({class:"flex-row"},
+        div({class:"crusher-side",style:()=>`flex-grow: ${squishAnim()}`},">"),
+        div({class:"processing-cores",style:"flex-grow: 1"},m.processing.map(core=>core.elt)),
+        div({class:"crusher-side",style:()=>`flex-grow: ${squishAnim()}`},"<")
+      )
+    )
+  },
 	descGen:(m)=>[
 		"ON:EXTRACT",
 		`PROC[${m.stats.speed.val.toFixed(1)}T ${m.stats.core_count.val}C]`,
@@ -94,7 +146,7 @@ templates.processor = {
 			material:"metal", formula: (f,q)=>90/(1+f*q)
 		},"core_count":{
 			char:"C",name:"Parallel Core Count",
-			material:"concrete", formula: (f,q)=>Math.round(1+f*q)
+			material:"concrete", formula: (f,q)=>Math.round(1+f*q**1.2)
 		},"productivity":{
 			char:"P",name:"Bonus Production Modifier",
 			material:"silicon", formula: (f,q)=>5*(1+f*q)
@@ -104,6 +156,19 @@ templates.processor = {
 	nameGen:(stats,m)=>{
 		return `${stats[0].char}X${stats[1].char}F-${m.stats.core_count.val}`
 	},
+  renderView:(m)=>{
+    const squishAnim = ()=>{
+      return (1-Math.abs(Math.sin(m.processing.reduce((t,b)=>t+b.t.val,0)*4+Math.PI/2)))/5
+    }
+
+    return div({class:"processor"},
+      div({class:"processor-entries"},div({class:"processor-grid"},m.processing.map(core=>core.elt))),
+      div({class:"processor-stats"},
+        div(`${m.stats.speed.val.toFixed(1)}T`),
+        div(`${m.stats.productivity.val.toFixed(1)}x`),
+      )
+    )
+  },
 	descGen:(m)=>[
 		"ON:REFINE",
 		`PROC[${m.stats.speed.val.toFixed(1)}T ${m.stats.core_count.val}C]`,

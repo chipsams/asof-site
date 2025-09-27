@@ -6,10 +6,12 @@ function displayCore(core){
 			class:()=>["core",core.r.val].join(" "),
 			style:()=>`--p:${core.t.val/core.maxT.val}`,
 			onmousedown:(e)=>{
-				storeResource(core.r.val,core.amt.val,core.mainElt)
-				core.r.val="";
-				core.amt.val=0;
-				core.t.val=0;
+        if(core.r.val !== ""){
+          storeResource(core.r.val,core.amt.val,core.mainElt)
+          core.r.val="";
+          core.amt.val=0;
+          core.t.val=0;
+        }
 				e.stopPropagation()
 			}
 		},
@@ -102,7 +104,7 @@ export function generateMachine(template,quality,existingData){
 		bias[stat].val /= total
 		//console.log(existingData?.stats?.[stat],bias[stat].val,stat)
 		if(existingData?.stats?.[stat]) bias[stat].val = existingData.stats[stat]
-		effectiveStats[stat] = van.derive(()=>template.stats[stat].formula(machine.quality.val,bias[stat].val))
+		effectiveStats[stat] = van.derive(()=>template.stats[stat].formula(bias[stat].val,machine.quality.val))
 	}
 	//console.log(bias)
 	
@@ -166,11 +168,11 @@ function displayPurchase(m,i,arr){
         if(m.val.materialCosts.some(v=>p.resources[v[0]].val<v[1])) return;
         m.val.materialCosts.forEach(v=>p.resources[v[0]].val-=v[1])
         for(let v of machineInventory) if(v.val == null){v.val = m.val; break}
-        machineChoices.forEach(o=>o.val = generateMachine(sample(templateSorts),Math.random()*2+2))
+        machineChoices.forEach(o=>o.val = generateMachine(sample(templateSorts),Math.random()*6+1))
       }},"devise"),
       button({onclick:()=>{
         machineIdeation.heldMachine.val = m.val
-        machineChoices.forEach(o=>o.val = generateMachine(sample(templateSorts),Math.random()*2+2))
+        machineChoices.forEach(o=>o.val = generateMachine(sample(templateSorts),Math.random()*6+1))
       }},"withold")
     )
   )

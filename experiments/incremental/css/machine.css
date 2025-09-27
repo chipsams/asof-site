@@ -27,16 +27,38 @@
 .machine:has(.machine-inner) {
 }
 
+.machine-title, .machine-inner {
+	border: solid #442 5px;
+  border-top: none;
+  border-left-color: #775;
+  border-top-color: #775;
+	background-color: #664;
+}
+
+.machine-title {
+  text-align: center;
+  border-bottom-width: 2px;
+}
+
+.machine-title:hover {
+  color: black;
+  background-color: #ddd;
+  border-color: white;
+}
+
 .machine-inner {
   box-sizing: border-box;
   width: 120px;
+  max-height: 120px;
 	aspect-ratio: 1 / 1;
-	border: outset #0004 5px;
-	background-color: #44f;
 	color: white;
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+}
+
+.machine-inner > :last-child {
+  flex-grow: 1;
 }
 
 .desc {
@@ -56,17 +78,6 @@
 	pointer-events:none;
 }
 
-.machine-inner ul {
-	flex-grow: 1;
-	margin: 0px;
-	padding-left: 25px;
-}
-
-.processing-cores {
-	display: flex;
-	border: 2px solid black;
-  margin-top: auto;
-}
 .core {
 	border: inset #0004;
 	flex-grow: 1;
@@ -78,6 +89,83 @@
 	pointer-events: all;
 }
 
+
+.processor {
+  display: flex;
+  overflow: hidden;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.processor-stats {  
+}
+
+.processor-stats div {
+  
+}
+
+.processor-entries {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  --row-height: 25%;
+  width: 4.5em;
+  background-color: #220;
+  scrollbar-color: #664 #220;
+  
+}
+
+.processor-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1.5em;
+  grid-template-rows: repeat(4, 25%);
+  height: 100%;
+  box-sizing: border-box;
+  min-width: 4.5em;
+  width: max-content;
+  background: 
+    repeating-linear-gradient(to right, #334, #0003 2px, #0003 calc(1.5em - 2px), #334 1.5em),
+    repeating-linear-gradient(#223, #000 calc(25% - 4px), #334 25%)
+  ;
+}
+
+.processor-entries .core {
+  font-size: 0.5em;
+  border: #777 double 3px;
+  border-right: solid 3px color-mix(in oklab, #f0f calc(var(--p) * 100%), #0f0);
+  position: relative;
+}
+.processor-entries .core:hover {
+  border-right: solid 3px #ff0;
+}
+.processor-entries .core::after {
+  content: '';
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  background: radial-gradient(#9990 80%, #777 80%);
+}
+
+
+.processor-entries:not(:has(:nth-child(5))) {
+  overflow-x: unset;
+}
+
+.processor-grid:not(:has(:nth-child(5))) {
+  background: 
+    repeating-linear-gradient(to right, #334, #0003 2px, #0003 calc(50% - 2px), #334 50%),
+    repeating-linear-gradient(#223, #000 calc(50% - 4px), #334 50%)
+  ;
+  grid-auto-columns: unset;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+}
+
+.processor-grid:not(:has(:nth-child(5))) .core {
+  border-width: 9px;
+}
+
 .interval-timer {
   margin-top: auto;
 	position: relative;
@@ -85,8 +173,8 @@
 	text-align: center;
 	color: #000;
 }
-
 .interval-indicator {
+  overflow: hidden;
 	position: absolute;
 	top: 0%;
 	left: 0%;
@@ -96,6 +184,28 @@
 	color: #fff;
 	transition: right 0.25s;
 }
+
+.crit-meter {
+  height: 1em;
+  position: relative;
+  background: linear-gradient(to left,green,lime var(--crit),yellow var(--crit), red);
+  overflow: hidden;
+}
+.crit-indicator {
+  position: absolute;
+  transition: right 0.4s cubic-bezier(0,1.2,1,1.2);
+  top: 0px;
+  bottom: 0px;
+  translate: 50% 0%;
+  width: 21px;
+  background: linear-gradient(to right,#0000,#9993 40%,#999,#9993 60%,#0000)
+}
+.crit-indicator.success {
+  background: linear-gradient(to right,#0000,#fff3 40%,#fff,#fff3 60%,#0000)
+}
+
+
+/* trading */
 
 .machine-trading {
   display: grid;
@@ -132,7 +242,6 @@
 .cost {
   flex-grow: 1;
 }
-
 .unbuyable {
 	color: red;
 }

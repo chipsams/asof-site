@@ -61,7 +61,8 @@ scrapData.scrapGrid = new Array(64).fill().map(_=>{
 
 export function scrapHit(v,dmg=1,crit=0.1,intercept){
 	
-	let isCrit = Math.random()<crit
+  let critCheck = Math.random()
+	let isCrit = critCheck<crit
 
   
 
@@ -77,21 +78,36 @@ export function scrapHit(v,dmg=1,crit=0.1,intercept){
 	
 	let effDmg = dmg * (isCrit?4:1)
 	v.hp.val -= effDmg
+
+  let data = {isCrit,critCheck,offX,offY}
+
 	if(v.hp.val<=0){
 		if(intercept){
-			intercept(v.res.val,1,v.elt)
+			intercept(v.res.val,1,v.elt,data)
 		}else{
 			gatherResource(v.res.val,1,v.elt)
 		}
 		v.hp.val = 0;
 		v.res.val = "none";
-	}
+	}else{
+		if(intercept) intercept("none",0,v.elt,data)
+  }
 
   let soundId = "h"+Math.floor(Math.random()*5+1)
   let id = sounds.play(soundId)
   let remainingHpFraction = v.hp.val/v.baseHP
   let dealtHpFraction = effDmg/v.baseHP 
   sounds.rate((1+3*remainingHpFraction)/(1+dealtHpFraction*4),id)
+
+  if(isCrit){
+    for(let l=1;l<=2;l++)setTimeout(()=>{
+      let id = sounds.play(soundId)
+      let remainingHpFraction = v.hp.val/v.baseHP
+      let dealtHpFraction = effDmg/v.baseHP 
+      sounds.rate((1+3*remainingHpFraction)/(1+dealtHpFraction*4)/(1+l/3),id)
+      sounds.volume(1-l*0.25,id)
+    },l*1500)
+  }
 }
 
 const sleep = t=>new Promise(r=>setTimeout(r,t))
