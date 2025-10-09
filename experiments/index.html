@@ -30,17 +30,6 @@
             <hr/>
             <ul>
                 <li>
-                    <a href="./incremental/">incremental material extraction thingy</a>
-                    <details>
-                        <summary>
-                            broad goal/explanation
-                        </summary>
-                        <p>
-                            gather resources, create machines to do it for you, better. all these resources seem very pre-refined. wonder why?
-                        </p>
-                    </details>
-                </li>
-                <li>
                     <a href="./mathcards/">math card thingy</a>
                     <details>
                         <summary>
@@ -69,8 +58,92 @@
                         there's also a side panel you can open for storing phrases you're translating or other notes! i made and then used it for <a href="https://lipu-sona.pona.la/">this toki pona course</a>, although i lost focus partway through as i tend to do.. needless to say, i hope i can follow through on it at some point!!
                     </details>
                 </li>
+                <li>
+                    <a href="./incremental/">incremental material extraction thingy</a>
+                    <details>
+                        <summary>
+                            broad goal/explanation
+                        </summary>
+                        <p>
+                            gather resources, create machines to do it for you, better. all these resources seem very pre-refined. wonder why?
+                        </p>
+                    </details>
+                </li>
+                <li>
+                    <a href="./factory-builttoscale/">factory game for "built to scale" jam (not posted)</a>
+                    <details>
+                        <summary>
+                            controls
+                        </summary>
+                        <table>
+                          <thead>
+                            <tr><th>control</th><th>function</th></tr>
+                          </thead>
+                          <tr><td>w/a/s/d</td> <td>move</td></tr>
+                          <tr><td>scroll</td> <td>rotate held machine</td></tr>
+                          
+                          <tr><td>hold r-mouse</td><td>remove machine</td></tr>
+                          <tr><td>r-mouse</td><td>clear cursor</td></tr>
+
+                          <tr><td>l-mouse</td><td>take from/place in hole-port</td></tr>
+                          <tr><td>l-mouse</td><td>place machine<br>(only if you have something selected)</td></tr>
+
+                          <tr><td>1-8</td><td>
+                            select machine category<br>
+                            (categories are pipes, mergers/arms, crafting machines, liquids, spouts, big pipes, mines/trashes, structural)<br>
+                            note that 5, spouts, is a distinct tool without any visuals that creates spouts if moused over a spout slot on a fluid machine..
+                          </td></tr>
+                          <tr><td>shift-scroll</td><td>select machine in category</td></tr>
+                        </table>
+                    </details>
+                    <details>
+                      <summary>
+                        concepts (+ post mortem)
+                      </summary>
+                      <p>
+                        items will move through pipes when inserted, stopping at pipes with open holes til another item tries to take its place. arms can pull them out or insert them, and while there is a more complex opus-magnum-y system underpinning what they do, the ones in this are preloaded with "pick up, move, place, return".. one part of the item pipes system i'm pretty happy with is how the pipe corners work!! they require an extra bit of space, which places some constraints on where you can put them.. they're also a bottleneck, which means you may need alternate solutions if high throughput is required.. for instance, the "really big pipes" seen in slot 6!! it does need something on all 3 lanes to fire, which was a misstep..
+                      </p>
+                      <p>
+                        crafters craft together their inputs into an output. currently just "iron + copper -> circuit". there's also furnaces. i was thinking of making them smelt their input in-place, so you needed to make the arms wait before taking the item out before i realized that was silly without a very fancy configuration tool.. so instead of fuel and smelting slot it just has input and output..
+                      </p>
+                      <p>
+                        fluid manipulation is done via spouts and pools that catch the liquid from spouts. i was just disinterested with using pipes for fluids because it's been done and its not very visually interesting, plus that was already the items things. i'm not certain what i was thinking because losing half your fluid to it flinging in a random direction is not very fun, really.. i believe one idea was to have spouts in more varieties than just random, with different spray patterns.. i hope someone invents liquids but awesome some day!! pipes are simply the best we have..
+                      </p>
+                      <p>
+                        the last category, "structural", contains fancy connecting texture wall objects and a 5x5 core, which would be for dumping items into for research. that would've been the gameplay loop, but really the main thing to do is create a smelting stack for iron and copper then make circuits in large quantities.. i think it's a decent bit of game even if it doesn't go anywhere!!
+                      </p>
+                    </details>
+                </li>
+                <li>
+                    <a href="./combatthing/">vampire survivors-like</a>
+                    <details>
+                        <summary>
+                            broad goal/explanation
+                        </summary>
+                        <p>
+                            kill enemies with a ranged and melee attack (l/r click), gaining upgrades. enemies sometimes spawn with the exact same upgrades, too!! due to how i coded it, when you die you are prompted to upgrade the enemy that killed you using all the xp you had when you died, which is funny..
+                        </p>
+                        <p>
+                          if you want to cheat, try hitting space!! lets you upgrade for free..
+                        </p>
+                    </details>
+                </li>
             </ul>
+            
             <hr/>
+            <div class="speech flex-left">
+              <img src="../img/asof.gif" alt="A short, fat, tailed person that is opening and closing its mouth to represent talking." width="128"/>
+                <div class="speech-text">
+                    <p>
+                        i'm unlikely to work on most of these again, unfortunately.. i have a habit of forgetting about projects after being really productive on them for a few days.. this is my asof curse..  
+                      </p>
+                      <p>
+                        feel free to steal the ideas from them though or talk to me about them!! maybe if you like it as much as i like them you could potentially motivate me on these!! i believe in this.. if you do st-eel them, do not hesitate to let me know!! 
+                      </p>
+                      <p>(i would like to sea what you create, and perhaps help if that is possible!!)</p>
+                </div>
+            </div>
+
             <footer>
                 <div>webpage by.. asof!!</div>    
                 <div>founded: under a rock!!</div>

@@ -1,0 +1,39 @@
+.screen {
+  background-color: #fff7;
+  margin: 5px;
+  padding: 10px;
+  border: solid 3px white;
+}
+
+.upgrade-list {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  row-gap: 4px;
+}
+
+.upgrade {
+  display: contents;
+}
+
+.upgrade h3 {
+  background-color: black;
+  margin: 0px;
+  padding: 5px;
+  border-bottom: solid var(--color) 4px;
+  align-self: flex-start;
+  text-align: right;
+  color: var(--color);
+}
+
+.upgrade p {
+  border-style: solid solid none solid;
+  margin: 0px;
+  border-width: 4px;
+  position: relative;
+  background-color: black;
+  color: var(--color);
+  z-index: 1;
+  max-width: 18em;
+  min-height: 2em;
+  padding: 5px;
+}

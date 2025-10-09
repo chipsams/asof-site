@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WAR!!!!!</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body style="margin: 0px; overflow: hidden; background: rgb(0, 0, 0); touch-action: none; user-select: none;">
+
+    <div class="templates" style="display: none;">
+      <template id="upgrade-template">
+        <div class="upgrade">
+          <h3 id="name"></h3>
+          <p id="description"></p>
+        </div>
+      </template>
+      <template id="upgrade-screen-template">
+        <div class="screen">
+          <h2>leveled up! pick an upgrade!</h2>
+          <h2 id="level">1 -> 2</h2>
+          <div id="options" class="upgrade-list"></div>
+        </div>
+      </template>
+    </div>
+
+    <!-- LittleJS Engine -->
+    <script src="littlejs.js"></script>
+
+    <script src="moves.js"></script>
+    <script src="upgrades.js"></script>
+    <script src="screens.js"></script>
+    <script src="combattants.js"></script>
+    <script src="game.js"></script>
+    
+    
+    <canvas style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated;" width="1858" height="994"></canvas><a style="display: none;"></a><canvas style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated;" width="1858" height="994"></canvas><canvas style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated;" width="1858" height="994"></canvas>
+    <div id="screenholder" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+  </body>
+</html>
