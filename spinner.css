@@ -1,24 +1,10 @@
-@keyframes spin {
-    0% { rotate: 0deg }
-    100% { rotate: 360deg }
-}
 .asof-spinner {
-    display: contents;
-    position: relative;
+  display: flex;
+  height: 100PX;
+  justify-content: END;
 }
 
 .asof-spinner img {
-    animation: spin 4s linear infinite;
-}
-
-@media (min-width: 700px) {
-    .asof-spinner {
-        display: block;
-    }
-
-    .asof-spinner img {
-        position: absolute;
-        top: -30px;
-        right: -60px;
-    }    
+  margin-right: -60px;
+  z-index: 40;
 }
