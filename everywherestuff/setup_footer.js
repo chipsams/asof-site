@@ -63,7 +63,8 @@ let choices = [...stats];
 
 let links = {
 	[choose("home","surface","root","entrance")]: "/",
-	[choose("bio","facts","asof","me","what")]: "/about/"
+	[choose("bio","facts","asof","me","what")]: "/about/",
+	[choose("media","likes","pearls","awesomes","other's")]: "/recommendations/"
 }
 
 document.querySelector("footer").append(elem("div","where? ",elem("select",{oninput:(e)=>{
