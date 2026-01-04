@@ -28,7 +28,7 @@
         </div>
 
         <div class="asof-spinner">
-            <audio id="hitnoise" preload="auto" controls>
+            <audio id="hitnoise" preload="auto">
               <source src="./flyswat/hitHurt.wav" type="audio/wav">
             </audio>
             <img id="smackable" src="./img/asof-spin-new.gif" alt="A short, fat, tailed person spinning." width="368" height="368" title="model by maddi, rotations by vriska"/>
@@ -49,8 +49,9 @@
                       {
                         offset:[0,0.1,1],
                         scale:[1,1,0.2],
-                        translate:["0px 0px","0px -150px","0px 2000px"]
-                      },{duration:2000,easing:"ease-in",fill:"forwards"}
+                        translate:["0px 0px","0px -150px","0px 2000px"],
+                        easing:["ease-out","ease-in","ease-out"]
+                      },{duration:1500,easing:"ease-in",fill:"forwards"}
                     ).onfinish = ()=>pendingHit=false
                   }
                 }else{
