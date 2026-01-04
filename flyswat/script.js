@@ -52,7 +52,8 @@ function minigame(e){
     hitRate > 0.5 ? "ooh.. oh no.. it'll take ages to find them all.." :
     hitRate > 0.3 ? "that's.. not great!!" :
     hit == 1 ? "at least you got one, i guess.." :
-    "you need to use the left mouse button or perhaps tap in order to get them!!"
+    hit == 0 ? "you need to use the left mouse button or perhaps tap in order to get them ok.." :
+    "well, the only way is up i guess!! because you are at the bottom.."
   }
 
   async function createAsof(mode){
