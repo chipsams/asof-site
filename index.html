@@ -28,10 +28,43 @@
         </div>
 
         <div class="asof-spinner">
-            <img src="./img/asof-spin-new.gif" alt="A short, fat, tailed person spinning." width="368" height="368" title="model by maddi, rotations by vriska"/>
+            <audio id="hitnoise" preload="auto">
+              <source src="./flyswat/hitHurt.wav" type="audio/wav">
+            </audio>
+            <img id="smackable" src="./img/asof-spin-new.gif" alt="A short, fat, tailed person spinning." width="368" height="368" title="model by maddi, rotations by vriska"/>
+            <script>
+              let audio = document.getElementById("hitnoise")
+              let smackable = document.getElementById("smackable")
+              let counter = 0
+              let pendingHit
+              smackable.addEventListener("click",event=>{
+                if(counter<5){
+                  event.preventDefault();
+                  audio.currentTime = 0
+                  audio.play()
+                  counter++
+                  if(counter==5){
+                    pendingHit = true
+                    smackable.animate(
+                      {
+                        offset:[0,0.1,1],
+                        scale:[1,1,0.2],
+                        translate:["0px 0px","0px -150px","0px 2000px"],
+                        easing:["ease-out","ease-in","ease-out"]
+                      },{duration:1500,easing:"ease-in",fill:"forwards"}
+                    ).onfinish = ()=>pendingHit=false
+                  }
+                }else{
+                  if(pendingHit) return;
+
+                  document.location.href = "flyswat/"
+                }
+              })
+            </script>
         </div>
 
         <div class="linkgroup">
+            <noscript><a href="flyswat/">fly swatting minigame (this is displaying because you don't have scripts enabled and i think otherwise this might be inaccessible by like archival sites or other crawlers because it'd only be in the scripts.. its calledbeing nice..)</a></noscript>
             <a href="recommendations/"><img src="img/asof-rec.png" alt="A short, fat, tailed person holding an arrow sign."> my recommendations..</a>
             <a href="experiments/"><img src="img/asof-experiment.png" alt="A short, fat, tailed person hunched inside a cone flask.">my web experiments..</a>
             <a href="apartment/"><img src="img/asof-apartment.png" alt="A short, fat, tailed person in front of an apartment block.">my virtual apartment..</a>
@@ -49,7 +82,6 @@
                     <li><a href="https://www.youtube.com/embed/yIQkyDupr9A?rel=0" target="asofs-movie">moon crystals</a></li>
                     <li><a href="https://www.youtube.com/embed/3ZCv7w4mVr0?rel=0" target="asofs-movie">music</a></li>
                     <li><a href="https://www.youtube.com/embed/kpk2tdsPh0A?rel=0" target="asofs-movie">watch for rolling rocks</a></li>
-                    <li><a href="https://www.youtube.com/watch?v=Xipn1IiX6ek?rel=0" target="asofs-movie">watch for rolling rocks</a></li>
                 </ul>
             </p>
         </div>

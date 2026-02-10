@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <div id="gameboard">
+      <div id="completionscreen" style="display:none;">
+        <h1>you got <span id="finalscore">000 / 000</span> hits</h1>
+        <p id="rating">good/bad job i haven't decided yet..</p>
+      </div>
+    </div>
+    <div class="menu">
+      <img src="./asof-spin.gif">
+      <img src="./asof-spin-defeated.gif">
+      <div class="game-controls">
+        <h1 id="score">000 / 000</h1>
+        <button id="gamestart" onclick="minigame()">minigame start</button>
+        <a href="..">back</a>
+      </div>
+      <img src="./cara-spin.gif">
+      <img src="./cara-spin-defeated.gif">
+    </div>
+      <details>
+        <summary>fly swatting minigame ost</summary>
+        <table>
+          <thead><th>name</th><th>audio player</th><th>source</th></thead>
+          <tbody>
+            <tr><td>soundtrack</td><td><audio id="soundtrack" src="./new_song.wav" preload="auto" controls></audio></td><td>me, asof :D</td></tr>
+            <tr><td>hit</td><td><audio id="hitnoise" src="./hitHurt.wav" preload="auto" controls></audio></td><td>jsfxr</td></tr>
+            <tr><td>yay</td><td><audio id="winnoise" src="./applause3.wav" preload="auto" controls></audio></td><td>deltarune</td></tr>
+            <tr><td>oops</td><td><audio id="oopsnoise" src="./GachiStateBack.wav" preload="auto" controls></audio></td><td>splatoon 1</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+    <script src="./script.js"></script>
+    <style>
+      body {
+        position: absolute;
+        left: 0%; right: 0%;
+        top: 0%; bottom: 0%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0px;
+        padding: 40px;
+      }
+
+      @keyframes background-scroll {
+        0% {
+          background-position: 0px 0px;
+        }
+        100% {
+          background-position: 64px 64px;
+        }
+      }
+
+      #gameboard {
+        user-select: none;
+        overflow: hidden;
+        position: relative;
+        animation: background-scroll 2s linear infinite;
+        display: block;
+        aspect-ratio: 2 / 1;
+        flex-grow: 1;
+        background-image: url("tile.png");
+        border-left: solid #c8dfc7 4px;
+        border-top: solid #c8dfc7 4px;
+        border-right: solid #4a6958 4px;
+        border-bottom: solid #4a6958 4px;
+        border-radius: 4px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #gameboard img {
+        position: absolute;
+        translate: -50% -50%;
+      }
+
+      #completionscreen {
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 8px black;
+        background-color: #4a6958;
+        width: max-content;
+      }
+
+      .menu {
+        display: flex;
+      }
+    </style>
+  </body>
+</html>
