@@ -128,6 +128,41 @@
                         </p>
                     </details>
                 </li>
+                <li>
+                    <a href="./apothtest/">dynamic crafting system test</a>
+                    <details>
+                        <summary>context</summary>
+                        <p>
+                            this is probably obvious but if you've played lucid blocks.. this is literally just the "apotheosis" crafting system. i'm making this for a minecraft modpack that may or may not see the light of day.. as i tend to do. sorryy
+                        </p>
+                    </details>
+                    <details>
+                        <summary>tips & tricks</summary>
+                        <p>
+                            the "thing_organized/keystone" variants of blocks have slightly different properties, with the most notable one being their significantly decreased naturalness.
+                        </p>
+                        <p>
+                            color is always considered in every recipe, however color blocks are still pretty difficult to use for "high-grade" items due to their other properties.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>spoilers/implementation details</summary>
+                        <p>
+                            items are graded based on
+                            <ul>
+                                <li>density</li>
+                                <li>clarity</li>
+                                <li>light</li>
+                                <li>value</li>
+                                <li>natural</li>
+                                <li>red</li>
+                                <li>green</li>
+                                <li>blue</li>
+                            </ul>
+                            in an 8-dimensional vector. the sum of all ingredient vectors is compared to the direction of all items and the closest 5 are candidates for the output.
+                        </p>
+                    </details>
+                </li>
             </ul>
             
             <hr/>

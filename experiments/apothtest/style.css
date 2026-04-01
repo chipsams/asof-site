@@ -1,0 +1,29 @@
+body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#item-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slots {
+    display: grid;
+    grid-auto-columns: 90px;
+    grid-auto-flow: column;
+}
+.slots > div {
+    text-align: center;
+    vertical-align: middle;
+    margin: 2px;
+    border: 1px dashed;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.5;
+}
