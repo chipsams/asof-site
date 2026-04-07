@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="canvasflex">
+            <canvas id="canvas" width="128" height="128"></canvas>
+            <noscript>sorry, it won't work without javascript..</noscript>
+        </div>
+        <textarea id="code" rows="8" cols="25" title="code">
+distance(
+    [x%32,(z+floor(x/32)*16)%32],
+    [16,16]
+)/16
+        </textarea>
+        <div>
+            <h1>asof's awesomes editor for mathy noise functions</h1>
+            <p>
+                see below two useful popups.. also! important!! most maths functions here require the <a href="https://modrinth.com/mod/more-density-functions">more density functions mod</a> so do download that ok..
+            </p>
+            <nav>
+                <button command="show-modal" commandfor="resources">Relevant Resources</button>
+                <button command="show-modal" commandfor="language guide">Language Guide</button>
+            </nav>
+        </div>
+        <textarea id="output" readonly title="output">
+
+        </textarea>
+
+        <dialog id="resources">
+            <h1>Relevant Resources</h1>
+            <p>
+                these are things that are at least tangentially important..
+            </p>
+            <ul>
+                <li><a href="https://modrinth.com/mod/more-density-functions">more density functions mod</a> (this page will not be very useful without this mod. maybe some day i'll add vanilla fallbacks for missing features where possible?)</li>
+                <li><a href="https://modrinth.com/mod/notenoughcrashes">not enough crashes</a> (worldgen crashes when you do typos, and this means you don't need to do a full reload. very handy for speeding up testing a little)</li>
+                <li><a href="https://github.com/klinbee/More-Density-Functions/wiki">more density functions wiki</a></li>
+                <li><a href="https://minecraft.wiki/w/Density_function">density functions page on minecraft.wiki</a></li>
+                <li><a href="https://github.com/josephg/noisejs/blob/master/perlin.js">perlin noise function library thing</a></li>
+            </ul>
+            <button commandfor="resources" command="close">Close</button>
+        </dialog>
+        <dialog id="language guide">
+            <h1>Language Guide</h1>
+            <p>
+                now, this will probably be familiar if you've ever done javascript or whatever.. basically you type maths expressions like x/64+0.5 and such, and the results of your expression are displayed on the square image, with cyan being -1 and magenta being +1. the panel shows all values from x=0-127 and z=0-127, with 3d density functions not being properly visualized currently (y defaults to 64, so you can at least verify that the surface looks sort of normal, i guess)
+            </p>
+            <p>
+                this language also supports a few maths functions, taken largely from more density functions. do note, it's <b>NOT</b> comprehensive. you can complain to me about it or download this webpage locally and add them yourself..
+            </p>
+            <h2>notable wierdnesses</h2>
+            <ul>
+                <li>distance([x,y,z,...],[x,y,z,...]) - takes an abitrary set of two n-dimensional vectors, returning the euclidian distance between them.</li>
+                <li>perlin(x,z,xScale,zScale) - scale is extracted for compatability with vanilla. i know there's more noise functions also, sorry for not implementing them..</li>
+            </ul>
+            <button commandfor="language guide" command="close">Close</button>
+        </dialog>
+        <script src="./perlin.js"></script>
+        <script src="./script.js"></script>
+    </body>
+</html>

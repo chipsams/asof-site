@@ -1,0 +1,57 @@
+body {
+    position: absolute;
+    top: 0px; bottom: 0px;
+    left: 0px; right: 0px;
+    
+    margin: 4px;
+    display: grid;
+    grid-template-columns: 256px 3fr;
+    column-gap: 4px;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 4px;
+    
+}
+
+body > * {
+    border: 1px solid salmon;
+    box-shadow: 2px 2px black;
+}
+
+
+textarea {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    resize: none;
+    flex: 1;
+}
+
+#canvasflex {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
+canvas {
+    align-self: center;
+    width: 100%;
+    aspect-ratio: 1/1;
+    image-rendering: crisp-edges;
+}
+
+.popup {
+    div {
+        position: absolute;
+        left: 30px;
+        right: 30px;
+        top: 30px;
+        bottom: 30px;
+        background-color: white;
+    }
+}
+
+h1, p {
+    font-size: 1em;
+    margin: 0px;
+}
