@@ -5,7 +5,7 @@ body {
     
     margin: 4px;
     display: grid;
-    grid-template-columns: 256px 3fr;
+    grid-template-columns: min-content 3fr min-content;
     column-gap: 4px;
     grid-template-rows: 1fr 1fr;
     row-gap: 4px;
@@ -26,6 +26,13 @@ textarea {
     flex: 1;
 }
 
+.left-panel {
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
 #canvasflex {
     display: flex;
     flex-direction: column;
@@ -35,7 +42,7 @@ textarea {
 
 canvas {
     align-self: center;
-    width: 100%;
+    width: 256px;
     aspect-ratio: 1/1;
     image-rendering: crisp-edges;
 }
@@ -54,4 +61,48 @@ canvas {
 h1, p {
     font-size: 1em;
     margin: 0px;
+}
+
+#settings {
+    overflow-y: scroll;
+    grid-row: span 2;
+    display: grid;
+    grid-template-columns: min-content min-content 1fr;
+    grid-column-gap: 4px;
+    grid-auto-rows: min-content;
+    
+    label,summary {
+        grid-column: 1 / -1;
+        padding: 0px 4px;
+        font-size: 0.75em;
+    }
+
+    div {
+        display: flex;
+    }
+
+    input {
+        margin: 0px 4px;
+    }
+    button {
+        width: min-content;
+    }
+
+    details {
+        border-top: 1px solid salmon;
+        border-bottom: 3px double salmon;
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-auto-rows: min-content;
+        background-color: #f223;
+    }
+
+    details[open]::details-content {
+        display: contents;
+    }
+}
+
+dialog {
+    margin: 128px;
 }

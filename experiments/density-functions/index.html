@@ -4,9 +4,21 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="canvasflex">
-            <canvas id="canvas" width="128" height="128"></canvas>
-            <noscript>sorry, it won't work without javascript..</noscript>
+        <div class="left-panel">
+            <div id="canvasflex">
+                <canvas id="canvas" width="128" height="128"></canvas>
+                <noscript>sorry, it won't work without javascript..</noscript>
+            </div>
+            <div>
+                <h1>asof's awesomes editor for mathy noise functions</h1>
+                <p>
+                    see below two useful popups.. also! important!! most maths functions here require the <a href="https://modrinth.com/mod/more-density-functions">more density functions mod</a> so do download that ok..
+                </p>
+                <nav>
+                    <button command="show-modal" commandfor="resources">Relevant Resources</button>
+                    <button command="show-modal" commandfor="language guide">Language Guide</button>
+                </nav>
+            </div>
         </div>
         <textarea id="code" rows="8" cols="25" title="code">
 distance(
@@ -14,20 +26,31 @@ distance(
     [16,16]
 )/16
         </textarea>
-        <div>
-            <h1>asof's awesomes editor for mathy noise functions</h1>
-            <p>
-                see below two useful popups.. also! important!! most maths functions here require the <a href="https://modrinth.com/mod/more-density-functions">more density functions mod</a> so do download that ok..
-            </p>
-            <nav>
-                <button command="show-modal" commandfor="resources">Relevant Resources</button>
-                <button command="show-modal" commandfor="language guide">Language Guide</button>
-            </nav>
+        <div id="settings">
+            <label for="y-pos">Y-Slice</label>
+            <input type="checkbox" name="topology-view">
+            <button reset="y-pos" value="60">R</button>
+            <input type="range" name="y-pos" min="-64" max="384" value="60">
+
+            <div>X</div>
+            <button reset="offset-x" value="0">R</button>
+            <input type="range" name="offset-x" min="-128" max="128" value="0">
+            <div>Z</div>
+            <button reset="offset-z" value="0">R</button>
+            <input type="range" name="offset-z" min="-128" max="128" value="0">
+            <details open>
+                <summary>hi</summary>
+                <div></div>
+                <input type="checkbox">
+                <input type="text">
+                <div></div>
+                <div></div>
+                <input type="text">
+            </details>
         </div>
         <textarea id="output" readonly title="output">
 
         </textarea>
-
         <dialog id="resources">
             <h1>Relevant Resources</h1>
             <p>
@@ -58,6 +81,7 @@ distance(
             <button commandfor="language guide" command="close">Close</button>
         </dialog>
         <script src="./perlin.js"></script>
+        <script src="./parser.js"></script>
         <script src="./script.js"></script>
     </body>
 </html>
