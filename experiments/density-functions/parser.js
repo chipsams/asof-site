@@ -41,10 +41,12 @@ let methods = {
         cache[self.id][ctx.x+","+ctx.z]??=a()
         return cache[self.id][ctx.x+","+ctx.z]
     },{_delayedEval:true,type:"minecraft:cache_2d"},"argument"),
+    ygrad:simpleWrap((self,ctx,fI,tI,fO,tO)=>Math.min(Math.max((ctx.y-fI)/(tI-fI),0),1)*(tO-fO)+fO,
+        "minecraft:y_clamped_gradient","from_y","to_y","from_value","to_value"),
     perlin:simpleWrap((self,_,x,y,sX,sY)=>noise.perlin2(x/sX,y/sY),
         "noise","x","z","scale_x","scale_z"),
     distance:simpleWrap((self,_,a,b)=>Math.sqrt(a.map((v,i)=>v-(b?b[i]:0)).reduce((a,b)=>a+b*b,0)),
-        {type:"moredfs:distance",distance_metric:{type:"euclidian"}},"points1","points2"),
+        {type:"moredfs:distance",distance_metric:{type:"euclidean"}},"point1","point2"),
     clamp:simpleWrap((self,_,v,l,u)=>Math.max(Math.min(v,u),l),"moredfs:clamp","argument","min","max"),
     clamp01:simpleWrap((self,_,v)=>Math.max(Math.min(v,1),0),{type:"moredfs:clamp",min:0,max:1},"argument"),
     clamp11:simpleWrap((self,_,v)=>Math.max(Math.min(v,1),-1),{type:"moredfs:clamp",min:-1,max:1},"argument"),
