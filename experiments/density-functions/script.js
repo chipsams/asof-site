@@ -2,6 +2,7 @@
 
 function toOutput(object){
     if(typeof object == "number") return object;
+    if(typeof object == "string") return object;
     if(Array.isArray(object)) return object.map(v=>toOutput(v));
     if(object._mn){
         return object._mn({obj:object},...object.args?.map?.(toOutput)??[])
@@ -33,22 +34,56 @@ function binarySearch(fn,min,max,guess=(min+max)/2){
     return guess
 }
 
-function draw(fn){
+const sleep = t=>new Promise(r=>setTimeout(r,t))
+
+/** @type {HTMLCanvasElement} */
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+ctx.fillStyle = "#000"
+ctx.fillRect(0,0,128,128)
+
+function markRendering(){
+    ctx.fillStyle = "#fff8"
+    ctx.fillRect(0,64-12,128,16)
+    ctx.textAlign = "center"
+    ctx.strokeText("rerendering..",64,64)
+}
+markRendering()
+
+
+let drawId = 0;
+async function draw(fn,thisDrawId){
+    let startTime = performance.now()
+
     let img = new ImageData(128,128)
-    for(let z=0;z<128;z++){
-        for(let x=0;x<128;x++){
-            let [r,g,b] = fn(x,z)
-            img.data[z*4*128+x*4] = r;
-            img.data[z*4*128+x*4+1] = g;
-            img.data[z*4*128+x*4+2] = b;
-            img.data[z*4*128+x*4+3] = 255;
+    for(let l=0;l<img.data.length;l+=4){
+        img.data[l]=0
+        img.data[l+1]=0
+        img.data[l+2]=0
+        img.data[l+3]=255
+    }
+    
+    let passes = [[0,0],[1,1],[0,1],[1,0]]
+    for(let [i,[oz,ox]] of Object.entries(passes)){
+        if(thisDrawId != drawId) return;
+        for(let z=oz;z<128;z+=2){
+            for(let x=ox;x<128;x+=2){
+                let [r,g,b] = fn(x,z)
+                img.data[z*4*128+x*4] = r;
+                img.data[z*4*128+x*4+1] = g;
+                img.data[z*4*128+x*4+2] = b;
+                img.data[z*4*128+x*4+3] = 255;
+            }
+        }
+        ctx.putImageData(img,0,0)
+        if((performance.now()-startTime)>(45*i+100)){
+            markRendering()
+            await sleep(0)
         }
     }
-    /** @type {HTMLCanvasElement} */
-    let canvas = document.getElementById("canvas");
-    let ctx = canvas.getContext("2d");
     ctx.putImageData(img,0,0)
 }
+
 function preCompute(fn){
     let outputs=[]
     for(let z=0;z<128;z++){
@@ -60,21 +95,53 @@ function preCompute(fn){
     return outputs
 }
 
-let codeArea = document.getElementById("code")
-function rerun(){
-    let code = codeArea.value
 
+let activeRun;
+let queuedRedraw = false;
+
+let codeArea = document.getElementById("code")
+async function rerun(){
+    drawId++;
+    if(activeRun){
+        queuedRedraw = true;
+        return;
+    }
+    //markRendering()
+
+    let code = codeArea.value
+    let codeData;
     try{
-        let parsed = parseCode(code)
+        codeData = parseCode(code)
     
         let out = document.getElementById("output")
-        out.value = JSON.stringify(toOutput(parsed),null,2)
+        out.value = JSON.stringify(Object.assign(toOutput(codeData.parsed),{_source:code}),null,2)
             .replaceAll(/\[\s*\d+(\s*,\s*\d+)*\s*\]/g,(v)=>v.replaceAll(/\s/g,""))
-            .replaceAll(/\{\s*"type"\s*:\s*"(\w+(?::\w+)?)"\s*(})?/g,'{"type":"$1"$2')
-        
+            .replaceAll(/\{\s*"type"\s*:\s*"(\w+(?::\w+)?)"\s*(})?/g,'{"type":"$1"$2');
+    }catch(e){
+        let out = document.getElementById("output")
+        await draw((x,z)=>{
+            return [clamp(x*2+Math.random()*20,0,255),z*2,255]
+        },drawId)
+        out.value = e
+        if(!e instanceof ParserError){
+            throw e
+        }
+        return;
+    }
+
+    let fn = codeData.fn;
+
+    activeRun = new Promise(async (r)=>{
+        await sleep(0)
         if(settings["topology-view"]){
-            let heights = preCompute((x,z)=>binarySearch((guess)=>evaluate({x:x+settings["offset-x"],z:z+settings["offset-z"],y:guess},parsed),-64,320))
-            draw((x,z)=>{
+            let heights = new Array(128).fill().map(v=>[])
+            await draw((x,z)=>{
+                let height=heights[z][x]=binarySearch((guess)=>fn({x:x+settings["offset-x"],z:z+settings["offset-z"],y:guess}),-64,320)
+                let inWater = height<settings["y-pos"]
+                return [clamp((height+64)/384*255,0,255),0,0]
+            },drawId)
+
+            await draw((x,z)=>{
                 let height = heights[z][x]
                 let inWater = height<settings["y-pos"]
 
@@ -84,21 +151,33 @@ function rerun(){
                 if((brighten<0) || inWater) brighten = 0
 
                 return [clamp((height+64)/384*255,0,255),0,inWater?128:0].map(v=>v+brighten*8-darken*8)
-            })
+            },drawId)
         }else{
             draw((x,z)=>{
-                let v = evaluate({x:x+settings["offset-x"],z:z+settings["offset-z"],y:settings["y-pos"]},parsed)
+                let v = fn({x:x+settings["offset-x"],z:z+settings["offset-z"],y:settings["y-pos"]})
                 return [Math.max(0,v*255),Math.max(0,-v*255),255]
-            })
+            },drawId)
         }
-    }catch(e){
+        r()
+    }).then(()=>{
+        activeRun = undefined
+        if(queuedRedraw){
+            queuedRedraw = false
+            rerun()
+        }
+    });
+    
+    activeRun.catch(e=>{
+        console.log("run errored")
+        activeRun = undefined
+        if(queuedRedraw){
+            queuedRedraw = false
+            rerun()
+        }
         let out = document.getElementById("output")
         out.value = e
-        draw((x,z)=>{
-            return [clamp(x*2+Math.random()*20,0,255),z*2,255]
-        })
-        return;
-    }
+        throw e
+    });
 }
 
 let settings = {}

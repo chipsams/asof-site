@@ -1,12 +1,28 @@
 let depth = 0
 let toks = []
 
+class ParserError extends Error {}
+
 const makeUUID = ()=>crypto.randomUUID()
 
 const simpleWrap = (fn,extraprops,...argNames)=>{
     let attr = {}
+    let opr
+    
     if(typeof extraprops == "string") extraprops = {type:extraprops}
-    if(extraprops._delayedEval) attr.delayedEval = delete extraprops._delayedEval
+    return {_fn:(self,ctx,...compArgs)=>(ctx)=>fn(ctx,...compArgs.map(v=>v(ctx))),
+        type:extraprops.type,_mn:(ctx,...args)=>{
+        let dat = Object.assign({},extraprops)
+        for(let l=0;l<argNames.length;l++){
+            dat[argNames[l]+((args[l]===undefined)?"_":"")] = args[l]??"NOT PROVIDED"
+        }
+        return dat
+    },attr}
+}
+
+const complexerWrap = (fn,extraprops,...argNames)=>{
+    let attr = {}
+    if(typeof extraprops == "string") extraprops = {type:extraprops}
 
     return {_fn:fn,type:extraprops.type,_mn:(ctx,...args)=>{
         let dat = Object.assign({},extraprops)
@@ -16,14 +32,18 @@ const simpleWrap = (fn,extraprops,...argNames)=>{
         return dat
     },attr}
 }
+
 const manyParam = (fn,extraprops,arg1,arg2)=>{
     return {_fn:fn,_mn:(ctx,...args)=>{
         if(typeof extraprops == "string") extraprops = {type:extraprops}
-        let dat = Object.assign({},extraprops)
-        for(let l=0;l<args.length;l++){
-            dat[argNames[l]] = args[l]
+        while(args.length>1)
+        for(let l=0;l<args.length-1;l++){
+            let [left,right] = args.splice(l,2)
+            let newValue = Object.assign({},extraprops,{[arg1]:left,[arg2]:right})
+            args.splice(l,0,newValue)
         }
-        return dat
+        console.log(args)
+        return args[0]
     }}
 }
 
@@ -33,30 +53,42 @@ let constants = {
     z: {type:"moredfs:z"}
 }
 
-let cache = {}
-
 let methods = {
-    cache2d:simpleWrap((self,ctx,a)=>{
-        cache[self.id]??=[]
-        cache[self.id][ctx.x+","+ctx.z]??=a()
-        return cache[self.id][ctx.x+","+ctx.z]
-    },{_delayedEval:true,type:"minecraft:cache_2d"},"argument"),
-    ygrad:simpleWrap((self,ctx,fI,tI,fO,tO)=>Math.min(Math.max((ctx.y-fI)/(tI-fI),0),1)*(tO-fO)+fO,
+    min:manyParam((self,ctx,...compArgs)=>{
+        return (ctx)=>Math.min(...compArgs.map(v=>v(ctx)))
+    },"minecraft:min","argument1","argument2"),
+    max:manyParam((self,ctx,...compArgs)=>{
+        return (ctx)=>Math.max(...compArgs.map(v=>v(ctx)))
+    },"minecraft:max","argument1","argument2"),
+    cache2d:complexerWrap((self,ctx,a)=>{
+        let cache = []
+        return (ctx)=>{
+            cache[ctx.x+","+ctx.z]??=a(Object.assign({},ctx,{y:0}))
+            return cache[ctx.x+","+ctx.z]
+        }
+    },{type:"minecraft:cache_2d"},"argument"),
+    select_range:complexerWrap((self,ctx,a,min,max,inrange,outrange)=>{
+        return (ctx)=>{
+            let aValue = a(ctx)
+            return aValue>=min(ctx) && aValue<max(ctx) ? inrange(ctx) : outrange(ctx)
+        }
+    },{type:"minecraft:range_choice"},"input","min_inclusive","max_exclusive","when_in_range","when_out_of_range"),
+    ygrad:simpleWrap((ctx,fI,tI,fO,tO)=>Math.min(Math.max((ctx.y-fI)/(tI-fI),0),1)*(tO-fO)+fO,
         "minecraft:y_clamped_gradient","from_y","to_y","from_value","to_value"),
-    perlin:simpleWrap((self,_,x,y,sX,sY)=>noise.perlin2(x/sX,y/sY),
-        "noise","x","z","scale_x","scale_z"),
-    distance:simpleWrap((self,_,a,b)=>Math.sqrt(a.map((v,i)=>v-(b?b[i]:0)).reduce((a,b)=>a+b*b,0)),
+    perlin:simpleWrap((ctx,type,xz_scale,y_scale)=>noise.perlin3(ctx.x/xz_scale,ctx.z/xz_scale,ctx.y/y_scale),
+        {type:"minecraft:noise"},"noise","xz_scale","y_scale"),
+    distance:simpleWrap((_,a,b)=>Math.sqrt(a.map((v,i)=>v-(b?b[i]:0)).reduce((a,b)=>a+b*b,0)),
         {type:"moredfs:distance",distance_metric:{type:"euclidean"}},"point1","point2"),
-    clamp:simpleWrap((self,_,v,l,u)=>Math.max(Math.min(v,u),l),"moredfs:clamp","argument","min","max"),
-    clamp01:simpleWrap((self,_,v)=>Math.max(Math.min(v,1),0),{type:"moredfs:clamp",min:0,max:1},"argument"),
-    clamp11:simpleWrap((self,_,v)=>Math.max(Math.min(v,1),-1),{type:"moredfs:clamp",min:-1,max:1},"argument"),
-    floor:simpleWrap((self,_,v)=>Math.floor(v),"moredfs:floor","argument"),
-    ceil:simpleWrap((self,_,v)=>Math.ceil(v),"moredfs:ceil","argument"),
-    round:simpleWrap((self,_,v)=>Math.round(v),"moredfs:round","argument"),
-    sin:simpleWrap((self,_,v)=>Math.sin(v),"moredfs:sin","argument"),
-    cos:simpleWrap((self,_,v)=>Math.cos(v),"moredfs:cos","argument"),
-    abs:simpleWrap((self,_,v)=>Math.abs(v),"minecraft:abs","argument"),
-    sign:simpleWrap((self,_,v)=>Math.sign(v),"moredfs:signum","argument")
+    clamp:simpleWrap((_,v,l,u)=>Math.max(Math.min(v,u),l),"moredfs:clamp","argument","min","max"),
+    clamp01:simpleWrap((_,v)=>Math.max(Math.min(v,1),0),{type:"moredfs:clamp",min:0,max:1},"argument"),
+    clamp11:simpleWrap((_,v)=>Math.max(Math.min(v,1),-1),{type:"moredfs:clamp",min:-1,max:1},"argument"),
+    floor:simpleWrap((_,v)=>Math.floor(v),"moredfs:floor","argument"),
+    ceil:simpleWrap((_,v)=>Math.ceil(v),"moredfs:ceil","argument"),
+    round:simpleWrap((_,v)=>Math.round(v),"moredfs:round","argument"),
+    sin:simpleWrap((_,v)=>Math.sin(v),"moredfs:sin","argument"),
+    cos:simpleWrap((_,v)=>Math.cos(v),"moredfs:cos","argument"),
+    abs:simpleWrap((_,v)=>Math.abs(v),"minecraft:abs","argument"),
+    sign:simpleWrap((_,v)=>Math.sign(v),"moredfs:signum","argument")
 }
 
 function binaryFormat(type,p1="argument1",p2="argument2"){
@@ -66,12 +98,12 @@ function binaryFormat(type,p1="argument1",p2="argument2"){
 const simple = (ctx,a,b)=>({type:ctx.obj.type,"paramter1":a,"paramter2":b})
 
 let binaryOperators = {
-    "^": {_mn:binaryFormat("moredfs:power","base","exponent"),_fn:(self,_,a,b)=>a**b,prec:0},
-    "*": {_mn:binaryFormat("minecraft:mul"),_fn:(self,_,a,b)=>a*b,prec:1},
-    "/": {_mn:binaryFormat("moredfs:div","numerator","denominator"),_fn:(self,_,a,b)=>a/b,prec:1},
-    "%": {_mn:binaryFormat("moredfs:mod","numerator","denominator"),_fn:(self,_,a,b)=>(a%b+b)%b,prec:1},
-    "+": {_mn:binaryFormat("minecraft:add"),_fn:(self,_,a,b)=>a+b,prec:2},
-    "-": {_mn:binaryFormat("moredfs:subtract"),_fn:(self,_,a,b)=>a-b,prec:2},
+    "^": {_mn:binaryFormat("moredfs:power","base","exponent"),_fn:(_,a,b)=>a**b,prec:0},
+    "*": {_mn:binaryFormat("minecraft:mul"),_fn:(_,a,b)=>a*b,prec:1},
+    "/": {_mn:binaryFormat("moredfs:div","numerator","denominator"),_fn:(_,a,b)=>a/b,prec:1},
+    "%": {_mn:binaryFormat("moredfs:mod","numerator","denominator"),_fn:(_,a,b)=>(a%b+b)%b,prec:1},
+    "+": {_mn:binaryFormat("minecraft:add"),_fn:(_,a,b)=>a+b,prec:2},
+    "-": {_mn:binaryFormat("moredfs:subtract"),_fn:(_,a,b)=>a-b,prec:2},
 }
 
 function debugify(...args){
@@ -80,7 +112,7 @@ function debugify(...args){
 }
 
 function expectAndShift(toks,symbol){
-    if(toks.shift() !== symbol) throw new Error(`expected ${symbol}!`)
+    if(toks.shift() !== symbol) throw new ParserError(`expected ${symbol}!`)
 }
 
 function parseValList(toks){
@@ -104,7 +136,7 @@ function parseVal(toks){
         debugify("parsing bracketed")
         expectAndShift(toks,"(")
         data = parseExpr(toks)
-        if(toks.shift()!==")") throw new Error("unclosed (!! (bracketed expression)")
+        if(toks.shift()!==")") throw new ParserError("unclosed (!! (bracketed expression)")
         debugify("done parsing bracketed")
         return data;
     }
@@ -113,7 +145,7 @@ function parseVal(toks){
         debugify("parsing array")
         expectAndShift(toks,"[")
         data = parseValList(toks)
-        if(toks.shift()!=="]") throw new Error("unclosed [!! (array)")
+        if(toks.shift()!=="]") throw new ParserError("unclosed [!! (array)")
         debugify("done parsing array")
         return data;
     }
@@ -128,18 +160,22 @@ function parseVal(toks){
             debugify("parsing function",tok)
             expectAndShift(toks,"(")
             let args = parseValList(toks)
-            if(toks.shift()!==")") throw new Error("unclosed )!! (function parameters)")
+            if(toks.shift()!==")") throw new ParserError("unclosed )!! (function parameters)")
                 debugify("done parsing function",tok)
-            if(typeof methods[tok] == "function") throw new Error("used old function "+tok)
+            if(typeof methods[tok] == "function") throw new ParserError("used old function "+tok)
             return {type:"function:"+tok,args:args,_fn:methods[tok]._fn,_mn:methods[tok]._mn,id:makeUUID(),attr:methods[tok].attr}
         }else{
-            return {type:"constant:"+tok,_autogen:"yes",_fn:(self,ctx)=>ctx[tok],_mn:()=>{
+            return {type:"constant:"+tok,_autogen:"yes",_fn:(self,ctx)=>(ctx)=>ctx[tok],_mn:()=>{
                 return constants[tok]
             },id:makeUUID()}
         }
     }
 
-    throw new Error("expected a value!")
+    if(stringRegex.test(toks.at(0))){
+        return toks.shift().slice(1,-1)
+    }
+
+    throw new ParserError("expected a value!")
 }
 
 function parseMonad(toks){
@@ -148,7 +184,7 @@ function parseMonad(toks){
         return {
             type:"moredfs:negate",
             args:[parseMonad(toks)],
-            _fn:(self,_,v)=>Array.isArray(v)?v.map(v=>-v):-v,
+            _fn:(self,_,v)=>(ctx)=>Array.isArray(v)?v.map(v=>-v(ctx)):-v(ctx),
             _mn:(_,a)=>({type:"moredfs:negate",argument:a}),
             id:makeUUID()
         };
@@ -163,36 +199,45 @@ function parseExpr(toks,prec = 2){
         let op = toks.shift()
         debugify("parsing op",op)
         let value2 = prec>0?parseExpr(toks,prec-1):parseMonad(toks)
-        value = {type:"operator:"+op,args:[value,value2],_fn:binaryOperators[op]._fn,_mn:binaryOperators[op]._mn,id:makeUUID()}
+        value = {type:"operator:"+op,args:[value,value2],_fn:(self,ctx,l,r)=>{
+            return (ctx)=>binaryOperators[op]._fn(ctx,l(ctx),r(ctx))
+        },_mn:binaryOperators[op]._mn,id:makeUUID()}
     }
     return value
 }
 
 const numberRegex = /([0-9]+(\.[0-9]+)?)/
+const stringRegex = /"[^"]*"/
 const symbolRegex = /[\(\)\[\],\<\>\+\-\*\%\/\^]/
 const identifierRegex = /[a-z][a-z_0-9]*(?::[a-z_0-9]+)?/
 let codeRegex = new RegExp([
     numberRegex.source,
+    stringRegex.source,
     symbolRegex.source,
     identifierRegex.source
 ].join("|"),"g")
 
 function parseCode(code){
     cache = {}
-    let toks = [...code.matchAll(codeRegex)].map(([v])=>v)
-    return parseExpr(toks)
+    let toks = [...code.matchAll(codeRegex)].map((r)=>r[0])
+    let parsed = parseExpr(toks)
+    return {parsed,fn:compile({},parsed)}
 }
 
-function evaluate(ctx,parsed){
-    if(parsed == undefined) return undefined;
-    if(typeof parsed == "number") return parsed;
-    if(Array.isArray(parsed)) return parsed.map(v=>evaluate(ctx,v));
+function compile(ctx,parsed){
+    switch(typeof parsed){
+        case "undefined":
+        case "string":
+        case "number": return ()=>parsed;
+        default: break;
+    }
+    if(Array.isArray(parsed)){
+        let fns = parsed.map(v=>compile(ctx,v));
+        return (ctx)=>fns.map(fn=>fn(ctx))
+    };
+
     if(parsed._fn){
-        let args = parsed.attr?.delayedEval
-            ?parsed.args?.map?.(v=>()=>evaluate(ctx,v)) ?? []
-            :parsed.args?.map?.(v=>evaluate(ctx,v)) ?? []
-        let out = parsed._fn(parsed,ctx,...args)
-        if(ctx.logging)console.log(parsed.type,args,"->",out)
-        return out
+        let fn = parsed._fn(parsed,ctx,...parsed.args?.map?.(a=>compile(ctx,a))??[])
+        return fn
     }
 }
